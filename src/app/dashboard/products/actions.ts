@@ -3,7 +3,6 @@
 import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
-import { notifyAllSubscribers } from "@/lib/push";
 
 const prisma = new PrismaClient();
 
@@ -54,20 +53,15 @@ export async function createProduct(formData: FormData): Promise<void> {
     }
   });
   
-  await prisma.activityLog.create({
+  prisma.activityLog.create({
     data: {
       userId: session.id,
       action: "CREATE_PRODUCT",
       details: `Added new product: ${name} (Code: ${newCode})`
     }
-  });
+  }).catch(console.error);
   
-  notifyAllSubscribers(
-    "شنطة جديدة وصلت! 👜✨",
-    `تم إضافة موديل جديد: ${name} (كود ${newCode})، ادخل شوفه دلوقتي!`,
-    "/store"
-  );
-  
+
   revalidatePath("/dashboard/products");
 }
 

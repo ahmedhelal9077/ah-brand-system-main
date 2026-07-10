@@ -147,13 +147,6 @@ model Customer {
   sales       Sale[]
 }
 
-model PushSubscription {
-  id        String   @id @default(cuid())
-  endpoint  String   @unique
-  auth      String
-  p256dh    String
-  createdAt DateTime @default(now())
-}
 
 model StoreLink {
   id        String   @id @default(cuid())

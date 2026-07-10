@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
 import { Search, ShoppingBag, Grid, User, ChevronLeft, ChevronRight, MapPin, Camera, Users } from "lucide-react";
 import { useSettings } from "@/lib/SettingsContext";
-import PushBell from "./PushBell";
-
 type Variant = { id: string; colorName: string; colorHex: string | null; stock: number; imageUrl: string | null };
 type Product = { id: string; name: string; price: number; code: number; variants: Variant[] };
 type Category = { id: string; name: string; products: Product[] };
@@ -237,7 +235,6 @@ export default function StoreClient({ categories, storeLinks = [], storeLocation
               onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
-          <PushBell />
           <Link href="/login" style={{ color: "var(--foreground)", opacity: 0.7, transition: "opacity 0.2s" }} className="hover-opacity" title={t("login" as any) || "Login"}>
             <User size={24} />
           </Link>
