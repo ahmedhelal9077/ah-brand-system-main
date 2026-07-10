@@ -1,1 +1,0 @@
-(()=>{let i=self;i.addEventListener("push",t=>{if(t.data){let n=t.data.json();t.waitUntil(i.registration.showNotification(n.title,{body:n.body,icon:n.icon||"/icon512_maskable.png",data:n.url}))}}),i.addEventListener("notificationclick",t=>{t.notification.close(),t.notification.data&&t.waitUntil(i.clients.openWindow(t.notification.data))})})();
