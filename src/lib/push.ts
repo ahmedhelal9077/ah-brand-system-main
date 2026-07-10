@@ -53,7 +53,8 @@ export async function notifyAllSubscribers(title: string, body: string, url: str
       });
     });
 
-    await Promise.all(promises);
+    // Don't await this so it doesn't block the server action response
+    Promise.all(promises).catch(console.error);
   } catch (error) {
     console.error("Error sending push notifications:", error);
   }
