@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import { join } from "path";
+import crypto from "crypto";
+
+const cloudName = process.env.CLOUDINARY_CLOUD_NAME || 'xlgpboze';
+const apiKey = process.env.CLOUDINARY_API_KEY || '883246922612925';
+const apiSecret = process.env.CLOUDINARY_API_SECRET || 'ae3r0fhuMb2cQ2lm2SxsccyQHiQ';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,14 +14,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "No file uploaded" }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Skip base64 conversion for faster upload
+    // The 'file' object is already a Blob/File from Next.js request.formData()
 
-    const mimeType = file.type || 'image/jpeg';
-    const base64Data = buffer.toString('base64');
-    const imageUrl = `data:${mimeType};base64,${base64Data}`;
+
+    // Upload to Cloudinary
+    const timestamp = Math.round((new Date()).getTime() / 1000);
+    const signatureString = `timestamp=${timestamp}${apiSecret}`;
+    const signature = crypto.createHash('sha1').update(signatureString).digest('hex');
+
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append('file', file);
+    cloudinaryFormData.append('api_key', apiKey);
+    cloudinaryFormData.append('timestamp', timestamp.toString());
+    cloudinaryFormData.append('signature', signature);
+
+    const cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: 'POST',
+      body: cloudinaryFormData
+    });
+
+    const result = await cloudinaryResponse.json();
+
+    if (!result.secure_url) {
+      throw new Error(result.error?.message || "Cloudinary upload failed");
+    }
     
-    return NextResponse.json({ success: true, imageUrl });
+    return NextResponse.json({ success: true, imageUrl: result.secure_url });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ success: false, message: "Upload failed" }, { status: 500 });

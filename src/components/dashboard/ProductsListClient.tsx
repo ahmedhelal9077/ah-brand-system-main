@@ -1,26 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Package, EyeOff, Eye, Palette } from "lucide-react";
 import Link from "next/link";
 import DeleteProductButton from "@/components/DeleteProductButton";
 import EditProductBtn from "@/components/dashboard/EditProductBtn";
 import SubmitButton from "@/components/SubmitButton";
 import { toggleProductActive } from "@/app/dashboard/products/actions";
-import { useRouter } from "next/navigation";
 
 export default function ProductsListClient({ products, categories, translations }: { products: any[], categories: any[], translations: Record<string, string> }) {
   const [visibleCount, setVisibleCount] = useState(30);
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
-
-  // Auto-refresh the page data every 5 seconds to make it "live"
-  useEffect(() => {
-    const interval = setInterval(() => {
-      router.refresh();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [router]);
 
   const filteredProducts = products.filter(prod => {
     if (!searchQuery) return true;
