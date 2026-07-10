@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  plainPassword String?
+  role      String   // "OWNER", "EMPLOYEE", or "WAREHOUSE"
+  isActive  Boolean  @default(true)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]   @relation("UserSales")
+  packedSales Sale[] @relation("PackedSales")
+  reservations Reservation[]
+  activities ActivityLog[]
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  isSystem  Boolean   @default(false) // For auto-managed categories if needed
+  products  Product[]
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  code        Int              @unique
+  name        String
+  price       Float
+  isActive    Boolean          @default(true)
+  categoryId  String?
+  category    Category?        @relation(fields: [categoryId], references: [id])
+  variants    ProductVariant[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  colorName String
+  colorHex  String?
+  imageUrl  String?
+  barcode   String   @unique
+  stock     Int      @default(0)
+  sales     SaleItem[]
+  reservations Reservation[]
+}
+
+model Sale {
+  id         String     @id @default(cuid())
+  userId     String
+  user       User       @relation("UserSales", fields: [userId], references: [id])
+  packedById String?
+  packedBy   User?      @relation("PackedSales", fields: [packedById], references: [id])
+  totalAmount   Float
+  discountAmount Float      @default(0)
+  remainingAmount Float?
+  invoiceCode   String?    @unique
+  customerId    String?
+  customer      Customer?  @relation(fields: [customerId], references: [id])
+  customerName  String?
+  customerPhone String?
+  customerPhone2 String?
+  customerCity  String?
+  customerAddress String?
+  orderNotes    String?
+  bostaTracking String?
+  bostaAwb      String?
+  isExchange    Boolean    @default(false)
+  type          String     @default("POS") // "POS" or "ONLINE"
+  status        String     @default("COMPLETED") // "COMPLETED", "PENDING", "PACKED", "CANCELLED"
+  hasIssue      Boolean    @default(false)
+  issueReason   String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @default(now()) @updatedAt
+  packedAt      DateTime?
+  items         SaleItem[]
+}
+
+model SaleItem {
+  id               String         @id @default(cuid())
+  saleId           String
+  sale             Sale           @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  quantity         Int
+  priceAtSale      Float
+  isReturned       Boolean        @default(false)
+  returnReason     String?
+  createdAt        DateTime       @default(now())
+}
+
+model Reservation {
+  id               String         @id @default(cuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  quantity         Int
+  expiresAt        DateTime
+  status           String         @default("ACTIVE") // ACTIVE, COMPLETED, CANCELED
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+}
+
+model StoreSettings {
+  id                 Int      @id @default(1)
+  telegramToken      String?
+  telegramChatId     String?
+  isTelegramEnabled  Boolean  @default(false)
+  bostaApiKey        String?
+  storeCity          String?
+  storeAddress       String?
+  updatedAt          DateTime @updatedAt
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  phone       String   @unique
+  phone2      String?
+  name        String?
+  city        String?
+  address     String?
+  totalOrders Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sales       Sale[]
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  auth      String
+  p256dh    String
+  createdAt DateTime @default(now())
+}
+
+model StoreLink {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  icon      String   @default("Link") // e.g. "Instagram", "Facebook", "Globe"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StoreLocation {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
