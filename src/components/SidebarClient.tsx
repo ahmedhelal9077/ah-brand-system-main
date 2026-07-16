@@ -79,7 +79,6 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
     { name: t("audit_title") || "Audit", href: "/dashboard/audit", icon: Camera, ownerOnly: true },
     { name: t("pos"), href: "/pos", icon: ShoppingCart },
     { name: t("store"), href: "/store", icon: Store },
-    { name: "إدارة الورديات", href: "/dashboard/shifts", icon: Clock },
     { name: "المصروفات", href: "/dashboard/expenses", icon: Wallet, ownerOnly: true },
     { name: "الحسابات", href: "/dashboard/accounting", icon: FileText, ownerOnly: true }
   ];
@@ -196,7 +195,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
           const linkProps = {
             style: { 
               display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 0.5rem", 
-              transition: "all 0.3s ease", color: "var(--sidebar-fg)", opacity: isActive ? 1 : 0.6,
+              transition: "all 0.3s ease", color: isActive ? "var(--sidebar-fg)" : "rgba(255,255,255,0.6)",
               justifyContent: isCollapsed ? "center" : "flex-start",
               cursor: "pointer",
               fontWeight: isActive ? 600 : 400
