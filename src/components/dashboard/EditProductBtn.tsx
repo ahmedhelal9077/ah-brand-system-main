@@ -25,7 +25,7 @@ export default function EditProductBtn({ product, categories }: {product: any;ca
         setIsOpen(false);
       }
     } catch (err) {
-      setError(t("trans_128"));
+      setError("حدث خطأ ما");
     } finally {
       setLoading(false);
     }
@@ -61,35 +61,35 @@ export default function EditProductBtn({ product, categories }: {product: any;ca
               <X size={24} />
             </button>
             
-            <h2 style={{ marginBottom: "1.5rem" }}>{t("trans_129")}</h2>
+            <h2 style={{ marginBottom: "1.5rem" }}>{"تعديل بيانات الشنطة"}</h2>
             
             {error && <div style={{ color: "var(--danger)", marginBottom: "1rem" }}>{error}</div>}
             
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="edit-name">{t("trans_130")}</label>
+                <label className="input-label" htmlFor="edit-name">{"الاسم"}</label>
                 <input className="input-field" type="text" id="edit-name" name="name" defaultValue={product.name} required />
               </div>
               
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="edit-price">{t("trans_131")}</label>
+                <label className="input-label" htmlFor="edit-price">{"السعر (جنيه)"}</label>
                 <input className="input-field" type="number" step="0.01" id="edit-price" name="price" defaultValue={product.price} required />
               </div>
               
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="edit-wholesalePrice">{t("trans_77")}</label>
+                <label className="input-label" htmlFor="edit-wholesalePrice">{"سعر الجملة (اختياري)"}</label>
                 <input className="input-field" type="number" step="0.01" id="edit-wholesalePrice" name="wholesalePrice" defaultValue={product.wholesalePrice ?? 0} />
               </div>
               
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="edit-code">{t("trans_132")}</label>
+                <label className="input-label" htmlFor="edit-code">{"الكود"}</label>
                 <input className="input-field" type="number" id="edit-code" name="code" defaultValue={product.code} required />
               </div>
               
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="edit-categoryId">{t("trans_11")}</label>
+                <label className="input-label" htmlFor="edit-categoryId">{"القسم"}</label>
                 <select className="input-field" id="edit-categoryId" name="categoryId" defaultValue={product.categoryId || ""}>
-                  <option value="">{t("trans_133")}</option>
+                  <option value="">{"بدون قسم"}</option>
                   {categories.map((cat) =>
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                 )}
@@ -97,7 +97,7 @@ export default function EditProductBtn({ product, categories }: {product: any;ca
               </div>
               
               <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                {loading ? <><Loader2 className="animate-spin" size={18} />{t("trans_64")}</> : t("trans_127")}
+                {loading ? <><Loader2 className="animate-spin" size={18} />{"جاري الحفظ..."}</> : "حفظ التعديلات"}
               </button>
             </form>
           </div>

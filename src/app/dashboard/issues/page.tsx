@@ -38,7 +38,7 @@ export default async function IssuesPage() {
     <div style={{ padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "2rem" }}>
         <AlertTriangle size={28} className="text-danger" />
-        <h1 style={{ fontSize: "1.8rem", fontWeight: "bold" }}>{t("trans_76")}</h1>
+        <h1 style={{ fontSize: "1.8rem", fontWeight: "bold" }}>{"مشاكل التقفيل في المخزن"}</h1>
       </div>
       <IssuesClient initialOrders={orders} />
     </div>);

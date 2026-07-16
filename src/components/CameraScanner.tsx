@@ -66,11 +66,11 @@ export default function CameraScanner({ onScan, onClose }: CameraScannerProps) {
   return (
     <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000, padding: "1rem" }}>
       <div className="glass-panel" style={{ background: "var(--background)", padding: "1.5rem", borderRadius: "var(--radius-lg)", width: "100%", maxWidth: "500px", display: "flex", flexDirection: "column" }}>
-        <h3 style={{ marginBottom: "1rem", textAlign: "center", fontWeight: "bold" }}>{t("trans_122")}</h3>
+        <h3 style={{ marginBottom: "1rem", textAlign: "center", fontWeight: "bold" }}>{"سكانر الكاميرا"}</h3>
         
         <div id="reader" style={{ width: "100%", background: "#fff", color: "#000", borderRadius: "8px", overflow: "hidden" }}></div>
         
-        <button onClick={onClose} className="btn btn-secondary" style={{ marginTop: "1.5rem", width: "100%" }}>{t("trans_123")}
+        <button onClick={onClose} className="btn btn-secondary" style={{ marginTop: "1.5rem", width: "100%" }}>{"إلغاء وإغلاق"}
 
         </button>
       </div>

@@ -58,17 +58,6 @@ export async function processSale(
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
-    let activeShiftId = null;
-    if (!isOnline) {
-      const activeShift = await prisma.shift.findFirst({
-        where: { userId: session.id, status: "OPEN" }
-      });
-      if (!activeShift) {
-        return { error: "يجب فتح شفت (وردية) أولاً قبل تسجيل أي مبيعات في المحل." }; // "You must open a shift first"
-      }
-      activeShiftId = activeShift.id;
-    }
-
     const prefix = generateInvoicePrefix();
     
     // We'll wrap the transaction in a retry loop to handle concurrent checkout collisions
@@ -129,42 +118,32 @@ export async function processSale(
             customerId = cust.id;
           }
 
-        // Pre-fetch wholesale prices for all cart items to freeze cost at sale
-        const variantIds = cart.map(i => i.variantId);
-        const variantsInfo = await tx.productVariant.findMany({
-          where: { id: { in: variantIds } },
-          include: { product: true }
-        });
-        const costMap = new Map(variantsInfo.map(v => [v.id, v.product.wholesalePrice || 0]));
-
-        const newSale = await tx.sale.create({
-          data: {
-            userId: session.id,
-            totalAmount,
-            discountAmount,
-            remainingAmount: remainingAmountStr ? parseFloat(remainingAmountStr) || null : null,
-            customerId,
-            customerName: customerData.name || null,
-            customerPhone: customerData.phone || null,
-            customerPhone2: customerData.phone2 || null,
-            customerCity: customerData.city || null,
-            customerAddress: customerData.address || null,
-            orderNotes: orderNotes || null,
-            isExchange: isExchange,
-            invoiceCode,
-            type: isOnline ? "ONLINE" : "POS",
-            status: isOnline ? "PENDING" : "COMPLETED",
-            shiftId: activeShiftId,
-            items: {
-              create: cart.map(item => ({
-                productVariantId: item.variantId,
-                quantity: item.quantity,
-                priceAtSale: item.price,
-                costAtSale: costMap.get(item.variantId) || 0
-              }))
+          const newSale = await tx.sale.create({
+            data: {
+              userId: session.id,
+              totalAmount,
+              discountAmount,
+              remainingAmount: remainingAmountStr ? parseFloat(remainingAmountStr) || null : null,
+              customerId,
+              customerName: customerData.name || null,
+              customerPhone: customerData.phone || null,
+              customerPhone2: customerData.phone2 || null,
+              customerCity: customerData.city || null,
+              customerAddress: customerData.address || null,
+              orderNotes: orderNotes || null,
+              isExchange: isExchange,
+              invoiceCode,
+              type: isOnline ? "ONLINE" : "POS",
+              status: isOnline ? "PENDING" : "COMPLETED",
+              items: {
+                create: cart.map(item => ({
+                  productVariantId: item.variantId,
+                  quantity: item.quantity,
+                  priceAtSale: item.price
+                }))
+              }
             }
-          }
-        });
+          });
 
       // 2. Decrement stock
       const productIdSet = new Set<string>();
@@ -488,14 +467,6 @@ export async function appendItemsToSale(
     const newTotal = sale.totalAmount + totalAddedAmount;
 
     await prisma.$transaction(async (tx) => {
-      // Pre-fetch wholesale prices for new items
-      const variantIds = cart.map(i => i.variantId);
-      const variantsInfo = await tx.productVariant.findMany({
-        where: { id: { in: variantIds } },
-        include: { product: true }
-      });
-      const costMap = new Map(variantsInfo.map(v => [v.id, v.product.wholesalePrice || 0]));
-
       // 1. Add items to sale
       for (const item of cart) {
         await tx.saleItem.create({
@@ -503,8 +474,7 @@ export async function appendItemsToSale(
             saleId: sale.id,
             productVariantId: item.variantId,
             quantity: item.quantity,
-            priceAtSale: item.price,
-            costAtSale: costMap.get(item.variantId) || 0
+            priceAtSale: item.price
           }
         });
 
@@ -811,14 +781,6 @@ export async function editOrderCashier(
         }
       }
 
-      // Pre-fetch wholesale prices for new items map
-      const cartVariantIds = cart.map(i => i.variantId);
-      const cartVariantsInfo = await tx.productVariant.findMany({
-        where: { id: { in: cartVariantIds } },
-        include: { product: true }
-      });
-      const cartCostMap = new Map(cartVariantsInfo.map(v => [v.id, v.product.wholesalePrice || 0]));
-
       // 3. Update Sale items (Replace old with new)
       await tx.saleItem.deleteMany({ where: { saleId } });
       await tx.saleItem.createMany({
@@ -826,8 +788,7 @@ export async function editOrderCashier(
           saleId,
           productVariantId: item.variantId,
           quantity: item.quantity,
-          priceAtSale: item.price,
-          costAtSale: cartCostMap.get(item.variantId) || 0
+          priceAtSale: item.price
         }))
       });
 

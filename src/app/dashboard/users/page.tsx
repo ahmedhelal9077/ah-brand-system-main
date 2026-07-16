@@ -15,8 +15,8 @@ export default async function UsersPage() {
     <div className="animate-fade-in">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <div>
-          <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{t("trans_101")}</h1>
-          <p style={{ color: "#9ca3af" }}>{t("trans_102")}</p>
+          <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{"إدارة المستخدمين"}</h1>
+          <p style={{ color: "#9ca3af" }}>{"إدارة الموظفين والمديرين والصلاحيات وكلمات المرور."}</p>
         </div>
       </div>
 

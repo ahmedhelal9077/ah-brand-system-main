@@ -113,8 +113,8 @@ export default function VariantForm({ productId }: {productId: string;}) {
         </div>
         
         <div className="input-group" style={{ marginBottom: "0" }}>
-          <label className="input-label" htmlFor="size">{t("trans_424")}</label>
-          <input className="input-field" type="text" id="size" name="size" placeholder={t("trans_425")} />
+          <label className="input-label" htmlFor="size">{"المقاس (للملابس)"}</label>
+          <input className="input-field" type="text" id="size" name="size" placeholder={"مثال: XL, L, 42..."} />
         </div>
         
         <div className="input-group" style={{ marginBottom: "0" }}>

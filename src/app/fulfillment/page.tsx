@@ -40,11 +40,11 @@ export default async function FulfillmentPage() {
         {/* Header */}
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "3rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
           <div>
-            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "var(--primary)" }}>{t("trans_115")}</h1>
-            <p style={{ color: "#9ca3af" }}>{t("trans_116")}{session.username}{t("trans_117")}</p>
+            <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "var(--primary)" }}>{"لوحة تجهيز الأوردرات الأونلاين"}</h1>
+            <p style={{ color: "#9ca3af" }}>{"مرحباً"}{session.username}{"، شد حيلك وجمع الأوردرات! 🚀"}</p>
           </div>
           <a href="/api/auth/logout" className="btn btn-secondary" style={{ display: "flex", gap: "0.5rem", alignItems: "center", textDecoration: "none" }}>
-            <LogOut size={18} />{t("trans_118")}
+            <LogOut size={18} />{"تسجيل خروج"}
           </a>
         </header>
 

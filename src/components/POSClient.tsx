@@ -6,7 +6,6 @@ import { Search, ShoppingCart, CheckCircle, AlertTriangle, LogOut, LayoutDashboa
 import Link from "next/link";
 import { useSettings } from "@/lib/SettingsContext";
 import CameraScanner from "./CameraScanner";
-import ShiftManager from "./pos/ShiftManager";
 import { egyptCitiesMap } from "@/lib/egyptCities";
 import { isNameWord, extractNameAndAddress } from "@/lib/arabicNames";
 
@@ -17,35 +16,35 @@ type VariantData = {
   imageUrl: string | null;
   barcode: string;
   stock: number;
-  product: {name: string;price: number;code: number;category?: {name: string;} | null;};
+  product: { name: string; price: number; code: number; category?: { name: string } | null };
 };
 
-type CartItem = VariantData & {quantity: number;};
+type CartItem = VariantData & { quantity: number };
 
 // Helper to convert Arabic numerals to English
 const toEnglishDigits = (str: string) => {
-  const arabicNumbers = [t("trans_309"), t("trans_310"), t("trans_311"), t("trans_312"), t("trans_313"), t("trans_314"), t("trans_315"), t("trans_316"), t("trans_317"), t("trans_318")];
+  const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
   return str.replace(/[٠-٩]/g, function (w) {
     return String(arabicNumbers.indexOf(w));
   });
 };
 
-const POSProductCard = ({ variants, onAddToCart, t }: {variants: VariantData[];onAddToCart: (v: VariantData) => void;t: any;}) => {
+const POSProductCard = ({ variants, onAddToCart, t }: { variants: VariantData[], onAddToCart: (v: VariantData) => void, t: any }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeVariant = variants[activeIndex] || variants[0];
-
+  
   if (!activeVariant) return null;
 
   return (
     <div className="glass-panel" style={{ padding: "0.8rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
       {/* Image */}
-      {activeVariant.imageUrl ?
-      <img src={activeVariant.imageUrl} loading="lazy" alt={activeVariant.product.name} style={{ width: "100%", height: "120px", objectFit: "contain", borderRadius: "var(--radius-sm)", display: "block" }} /> :
-
-      <div style={{ width: "100%", height: "120px", background: "var(--secondary)", borderRadius: "var(--radius-sm)", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      {activeVariant.imageUrl ? (
+        <img src={activeVariant.imageUrl} loading="lazy" alt={activeVariant.product.name} style={{ width: "100%", height: "120px", objectFit: "contain", borderRadius: "var(--radius-sm)", display: "block" }} />
+      ) : (
+        <div style={{ width: "100%", height: "120px", background: "var(--secondary)", borderRadius: "var(--radius-sm)", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <ImageIcon size={32} opacity={0.5} />
         </div>
-      }
+      )}
       
       {/* Details */}
       <div style={{ fontSize: "0.75rem", color: "var(--primary)", fontFamily: "monospace" }}>
@@ -62,55 +61,55 @@ const POSProductCard = ({ variants, onAddToCart, t }: {variants: VariantData[];o
       </div>
 
       {/* Color Swatches */}
-      {variants.length > 1 &&
-      <div
-        className="hide-scrollbar"
-        style={{
-          display: "flex",
-          gap: "0.4rem",
-          overflowX: "auto",
-          marginTop: "0.3rem",
-          paddingBottom: "0.2rem",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none"
-        }}>
-        
-          {variants.map((v, i) =>
-        <button
-          key={v.id}
-          onClick={(e) => {e.preventDefault();e.stopPropagation();setActiveIndex(i);}}
-          title={v.colorName}
-          style={{
-            flexShrink: 0,
-            width: "24px", height: "24px", borderRadius: "50%",
-            background: v.colorHex || "#ccc",
-            border: i === activeIndex ? "2px solid var(--foreground)" : "1px solid var(--border)",
-            boxShadow: i === activeIndex ? "0 0 0 2px var(--background) inset" : "none",
-            cursor: "pointer",
-            padding: 0
-          }} />
-
-        )}
+      {variants.length > 1 && (
+        <div 
+          className="hide-scrollbar"
+          style={{ 
+            display: "flex", 
+            gap: "0.4rem", 
+            overflowX: "auto", 
+            marginTop: "0.3rem",
+            paddingBottom: "0.2rem",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          {variants.map((v, i) => (
+            <button
+              key={v.id}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setActiveIndex(i); }}
+              title={v.colorName}
+              style={{
+                flexShrink: 0,
+                width: "24px", height: "24px", borderRadius: "50%",
+                background: v.colorHex || "#ccc",
+                border: i === activeIndex ? "2px solid var(--foreground)" : "1px solid var(--border)",
+                boxShadow: i === activeIndex ? "0 0 0 2px var(--background) inset" : "none",
+                cursor: "pointer",
+                padding: 0
+              }}
+            />
+          ))}
         </div>
-      }
+      )}
 
       {/* Add Button */}
-      <button
-        onClick={(e) => {e.stopPropagation();onAddToCart(activeVariant);}}
+      <button 
+        onClick={(e) => { e.stopPropagation(); onAddToCart(activeVariant); }}
         disabled={activeVariant.stock === 0}
         className="btn btn-primary"
-        style={{ width: "100%", marginTop: "0.3rem", padding: "0.5rem", justifyContent: "center", background: activeVariant.stock === 0 ? "var(--secondary)" : "var(--primary)", color: activeVariant.stock === 0 ? "#9ca3af" : "white" }}>
-        
-        <ShoppingCart size={16} />{t("trans_319")}
+        style={{ width: "100%", marginTop: "0.3rem", padding: "0.5rem", justifyContent: "center", background: activeVariant.stock === 0 ? "var(--secondary)" : "var(--primary)", color: activeVariant.stock === 0 ? "#9ca3af" : "white" }}
+      >
+        <ShoppingCart size={16} /> إضافة 
       </button>
-    </div>);
-
+    </div>
+  );
 };
 
-export default function POSClient({ variants, userRole, activeShift, userId }: {variants: VariantData[];userRole: string;activeShift?: any;userId: string;}) {
+export default function POSClient({ variants, userRole }: { variants: VariantData[], userRole: string }) {
   const { t } = useSettings();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(t("trans_181"));
+  const [selectedCategory, setSelectedCategory] = useState("الكل");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -123,7 +122,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   const [magicText, setMagicText] = useState("");
   const [customerDeposit, setCustomerDeposit] = useState<number | "">("");
   const [depositImages, setDepositImages] = useState<string[]>([]);
-  const [receiptData, setReceiptData] = useState<{cart: CartItem[];total: number;date: Date;customerData: {name: string;phone: string;phone2?: string;city: string;address: string;};orderNotes: string;invoiceCode?: string;discountAmount?: number;} | null>(null);
+  const [receiptData, setReceiptData] = useState<{ cart: CartItem[], total: number, date: Date, customerData: { name: string, phone: string, phone2?: string, city: string, address: string }, orderNotes: string, invoiceCode?: string, discountAmount?: number } | null>(null);
   const [showCamera, setShowCamera] = useState(false);
   const [discountValue, setDiscountValue] = useState<number | "">("");
   const [discountType, setDiscountType] = useState<"amount" | "percentage">("amount");
@@ -143,8 +142,8 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   const [editDepositScreenshotPOS, setEditDepositScreenshotPOS] = useState<File | null>(null);
   const [isUpdatingDepositPOS, setIsUpdatingDepositPOS] = useState(false);
 
-  const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-  const calculatedDiscount = discountType === "percentage" ? subtotal * (Number(discountValue) || 0) / 100 : Number(discountValue) || 0;
+  const subtotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  const calculatedDiscount = discountType === "percentage" ? (subtotal * (Number(discountValue) || 0)) / 100 : (Number(discountValue) || 0);
   const total = Math.max(0, subtotal - calculatedDiscount);
 
   const getCityFromAddress = (address: string) => {
@@ -155,32 +154,32 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   };
 
   const currentCity = customerCity.trim() || getCityFromAddress(customerAddress);
-  const upperEgyptCities = [t("trans_320"), t("trans_321"), t("trans_322"), t("trans_323"), t("trans_324"), t("trans_325"), t("trans_326"), t("trans_327"), t("trans_328"), t("trans_329"), t("trans_330"), t("trans_331")];
+  const upperEgyptCities = ["الفيوم", "بني سويف", "المنيا", "اسيوط", "أسيوط", "سوهاج", "قنا", "الاقصر", "الأقصر", "اسوان", "أسوان", "الوادي الجديد"];
+  
+  const isTantaOrder = currentCity === "طنطا" || currentCity.includes("طنطا") || (currentCity === "الغربية" && (customerAddress.includes("طنطا") || customerAddress.toLowerCase().includes("tanta")));
 
-  const isTantaOrder = currentCity === t("trans_175") || currentCity.includes(t("trans_175")) || currentCity === t("trans_176") && (customerAddress.includes(t("trans_175")) || customerAddress.toLowerCase().includes("tanta"));
-
-  const expectedShipping = isTantaOrder ? 0 : currentCity ?
-  upperEgyptCities.includes(currentCity) ? 130 : 110 :
-  cart.length > 0 ? 110 : 0;
+  const expectedShipping = isTantaOrder ? 0 : (currentCity 
+    ? (upperEgyptCities.includes(currentCity) ? 130 : 110) 
+    : (cart.length > 0 ? 110 : 0));
 
   const finalRequired = total + expectedShipping;
   const depositNum = Number(customerDeposit) || 0;
   const remainingCOD = Math.max(0, finalRequired - depositNum);
   const isDepositExceeding = depositNum > finalRequired;
 
-  const categories = [t("trans_181"), ...Array.from(new Set(variants.map((v) => v.product.category?.name || "Uncategorized")))];
+  const categories = ["الكل", ...Array.from(new Set(variants.map(v => v.product.category?.name || "Uncategorized")))];
 
-  const filteredVariants = variants.filter((v) => {
+  const filteredVariants = variants.filter(v => {
     const categoryName = v.product.category?.name || "Uncategorized";
-    if (selectedCategory !== t("trans_181") && categoryName !== selectedCategory) return false;
-
+    if (selectedCategory !== "الكل" && categoryName !== selectedCategory) return false;
+    
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    return v.barcode.includes(q) ||
-    v.product.name.toLowerCase().includes(q) ||
-    v.colorName.toLowerCase().includes(q) ||
-    v.product.code.toString().includes(q) ||
-    v.product.price.toString().includes(q);
+    return v.barcode.includes(q) || 
+           v.product.name.toLowerCase().includes(q) || 
+           v.colorName.toLowerCase().includes(q) ||
+           v.product.code.toString().includes(q) ||
+           v.product.price.toString().includes(q);
   });
 
   useEffect(() => {
@@ -190,30 +189,30 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   useEffect(() => {
     let phone = customerPhone.replace(/\D/g, "");
     if (phone.length === 11 && phone.startsWith("01")) {
-      fetch(`/api/customers/search?phone=${phone}`).
-      then((res) => res.json()).
-      then((data) => {
-        if (data) {
-          setCustomerName((prev) => prev ? prev : data.name || "");
-          setCustomerCity((prev) => prev ? prev : data.city || "");
-          setCustomerAddress((prev) => prev ? prev : data.address || "");
-        }
-      }).
-      catch((err) => console.error("Error fetching customer", err));
+      fetch(`/api/customers/search?phone=${phone}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setCustomerName(prev => prev ? prev : (data.name || ""));
+            setCustomerCity(prev => prev ? prev : (data.city || ""));
+            setCustomerAddress(prev => prev ? prev : (data.address || ""));
+          }
+        })
+        .catch(err => console.error("Error fetching customer", err));
     }
   }, [customerPhone]);
 
   const addToCart = (variant: VariantData) => {
     if (variant.stock <= 0) return alert(t("outOfStock"));
-
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === variant.id);
+    
+    setCart(prev => {
+      const existing = prev.find(item => item.id === variant.id);
       if (existing) {
         if (existing.quantity >= variant.stock) {
           alert(t("cannotExceedStock" as any) || "Cannot exceed available stock");
           return prev;
         }
-        return prev.map((item) => item.id === variant.id ? { ...item, quantity: item.quantity + 1 } : item);
+        return prev.map(item => item.id === variant.id ? { ...item, quantity: item.quantity + 1 } : item);
       }
       return [...prev, { ...variant, quantity: 1 }];
     });
@@ -223,39 +222,39 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     if (!text.trim()) return;
     text = toEnglishDigits(text);
 
-    const isMultiLine = text.includes("\n") || text.includes(t("trans_130")) || text.includes(t("trans_332"));
+    const isMultiLine = text.includes("\n") || text.includes("الاسم") || text.includes("العنوان");
 
-    let cleanText = text.
-    replace(/الاسم\s*[:\-]?\s*/gi, "\n").
-    replace(/العنوان\s*[:\-]?\s*/gi, "\n").
-    replace(/المحافظة\s*[:\-]?\s*/gi, "\n").
-    replace(/رقم الموبايل\s*[:\-]?\s*/gi, "\n").
-    replace(/تليفون\s*[:\-]?\s*/gi, "\n");
+    let cleanText = text
+      .replace(/الاسم\s*[:\-]?\s*/gi, "\n")
+      .replace(/العنوان\s*[:\-]?\s*/gi, "\n")
+      .replace(/المحافظة\s*[:\-]?\s*/gi, "\n")
+      .replace(/رقم الموبايل\s*[:\-]?\s*/gi, "\n")
+      .replace(/تليفون\s*[:\-]?\s*/gi, "\n");
 
     // Extract phones
     const phoneRegex = /(?:(?:\+|00)20\s*|0)?1[0125](?:\s*\d){8}/g;
     const phoneMatches = Array.from(cleanText.matchAll(phoneRegex));
-
+    
     if (phoneMatches && phoneMatches.length > 0) {
       let firstPhone = "";
       let secondPhone = "";
-
+      
       if (phoneMatches.length === 1) {
         firstPhone = phoneMatches[0][0];
       } else {
         // If there are multiple, check for "واتس"
         const p1 = phoneMatches[0][0];
         const p2 = phoneMatches[1][0];
-
+        
         // Find positions
         const idx1 = cleanText.indexOf(p1);
         const idx2 = cleanText.indexOf(p2);
-
+        
         // Check surrounding text (e.g., 20 chars before) for "واتس"
         const textBefore1 = cleanText.substring(Math.max(0, idx1 - 20), idx1);
         const textBefore2 = cleanText.substring(Math.max(0, idx2 - 20), idx2);
-
-        if (textBefore2.includes(t("trans_333"))) {
+        
+        if (textBefore2.includes("واتس")) {
           firstPhone = p2;
           secondPhone = p1;
         } else {
@@ -266,17 +265,17 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
       const formatPhone = (p: string) => {
         let formatted = p.replace(/\D/g, "");
-        if (formatted.startsWith("002001")) formatted = formatted.replace("002001", "01");else
-        if (formatted.startsWith("00201")) formatted = formatted.replace("00201", "01");else
-        if (formatted.startsWith("2001")) formatted = formatted.replace("2001", "01");else
-        if (formatted.startsWith("201")) formatted = formatted.replace("201", "01");else
-        if (formatted.startsWith("1") && formatted.length === 10) formatted = "0" + formatted;
+        if (formatted.startsWith("002001")) formatted = formatted.replace("002001", "01");
+        else if (formatted.startsWith("00201")) formatted = formatted.replace("00201", "01");
+        else if (formatted.startsWith("2001")) formatted = formatted.replace("2001", "01");
+        else if (formatted.startsWith("201")) formatted = formatted.replace("201", "01");
+        else if (formatted.startsWith("1") && formatted.length === 10) formatted = "0" + formatted;
         return formatted;
       };
-
+      
       setCustomerPhone(formatPhone(firstPhone));
       cleanText = cleanText.replace(firstPhone, isMultiLine ? "\n" : " ");
-
+      
       if (secondPhone) {
         setCustomerPhone2(formatPhone(secondPhone));
         cleanText = cleanText.replace(secondPhone, isMultiLine ? "\n" : " ");
@@ -299,7 +298,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   }
 
   const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCart(prev => prev.filter(item => item.id !== id));
   };
 
   const addToCartRef = useRef(addToCart);
@@ -316,7 +315,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
       const currentTime = Date.now();
-
+      
       // If time between keystrokes is too long (> 150ms), it's probably human typing
       if (currentTime - lastKeyTime > 150) {
         buffer = "";
@@ -324,13 +323,13 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
       if (e.key === "Enter") {
         if (buffer.length >= 3) {
-          const variant = variants.find((v) => v.barcode === buffer);
+          const variant = variants.find(v => v.barcode === buffer);
           if (variant) {
             addToCartRef.current(variant);
           } else {
-
             // Optional: alert that barcode is not found
-          }}
+          }
+        }
         buffer = "";
       } else if (e.key.length === 1) {
         buffer += e.key;
@@ -351,7 +350,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       if (pastedText && pastedText.trim().length > 10) {
         // Prevent default if they pasted outside, or if they pasted in the magic box
         if (target.id === "magic-box") e.preventDefault();
-
+        
         setMagicText(pastedText);
         processMagicText(pastedText);
       }
@@ -362,7 +361,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("paste", handleGlobalPaste);
-    };
+    }
   }, [variants]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -370,7 +369,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     if (!files) return;
     const newImages: string[] = [];
     let loadedCount = 0;
-
+    
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const reader = new FileReader();
@@ -381,7 +380,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
           let width = img.width;
           let height = img.height;
           const MAX_SIZE = 800;
-
+          
           if (width > height && width > MAX_SIZE) {
             height *= MAX_SIZE / width;
             width = MAX_SIZE;
@@ -389,19 +388,19 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
             width *= MAX_SIZE / height;
             height = MAX_SIZE;
           }
-
+          
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
           ctx?.drawImage(img, 0, 0, width, height);
-
+          
           // Compress to JPEG with 60% quality
           const compressedBase64 = canvas.toDataURL("image/jpeg", 0.6);
           newImages.push(compressedBase64);
-
+          
           loadedCount++;
           if (loadedCount === files.length) {
-            setDepositImages((prev) => [...prev, ...newImages]);
+            setDepositImages(prev => [...prev, ...newImages]);
           }
         };
         img.src = reader.result as string;
@@ -417,18 +416,18 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   const handleCheckout = async () => {
     if (cart.length === 0) return;
-
+    
     const confirm = window.confirm(t("confirmDeduct"));
     if (!confirm) return;
 
     setIsProcessing(true);
     const result = await processSale(
-      cart.map((c) => ({ variantId: c.id, quantity: c.quantity, price: c.product.price })),
+      cart.map(c => ({ variantId: c.id, quantity: c.quantity, price: c.product.price })),
       { name: customerName, phone: customerPhone, phone2: customerPhone2, city: customerCity, address: customerAddress },
       orderNotes,
       calculatedDiscount
     );
-
+    
     if ("error" in result && result.error) {
       alert("Error: " + result.error);
     } else {
@@ -453,39 +452,39 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   const handleOnlineOrder = async () => {
     if (cart.length === 0) return;
-
+    
     const depositNum = Number(customerDeposit) || 0;
     if (!isTantaOrder && depositNum > 0 && depositImages.length === 0) {
-      return alert(t("trans_334"));
+      return alert("برجاء إرفاق صورة اسكرين التحويل أولاً!");
     }
-
+    
     let cleanPhone = customerPhone.replace(/\D/g, "");
-    if (cleanPhone.startsWith("002001")) cleanPhone = cleanPhone.replace("002001", "01");else
-    if (cleanPhone.startsWith("00201")) cleanPhone = cleanPhone.replace("00201", "01");else
-    if (cleanPhone.startsWith("2001")) cleanPhone = cleanPhone.replace("2001", "01");else
-    if (cleanPhone.startsWith("201")) cleanPhone = cleanPhone.replace("201", "01");else
-    if (cleanPhone.startsWith("1") && cleanPhone.length === 10) cleanPhone = "0" + cleanPhone;
+    if (cleanPhone.startsWith("002001")) cleanPhone = cleanPhone.replace("002001", "01");
+    else if (cleanPhone.startsWith("00201")) cleanPhone = cleanPhone.replace("00201", "01");
+    else if (cleanPhone.startsWith("2001")) cleanPhone = cleanPhone.replace("2001", "01");
+    else if (cleanPhone.startsWith("201")) cleanPhone = cleanPhone.replace("201", "01");
+    else if (cleanPhone.startsWith("1") && cleanPhone.length === 10) cleanPhone = "0" + cleanPhone;
 
     if (!cleanPhone || cleanPhone.length !== 11 || !cleanPhone.startsWith("01")) {
-      return alert(t("trans_335"));
+      return alert("برجاء إدخال رقم تليفون مصري صحيح (مثال: 01012345678) لتأكيد الأونلاين!");
     }
-
+    
     // Update the state so the receipt and DB save the clean 11-digit version
     setCustomerPhone(cleanPhone);
-
+    
     if (!customerCity && !customerAddress) {
-      return alert(t("trans_336"));
+      return alert("برجاء إدخال المحافظة والعنوان لتأكيد طلب الأونلاين!");
     }
 
-    if (!isTantaOrder && customerDeposit === "") return alert(t("trans_337"));
-    if (isDepositExceeding) return alert(t("trans_338"));
-
-    const confirm = window.confirm(t("trans_339"));
+    if (!isTantaOrder && customerDeposit === "") return alert("برجاء إدخال قيمة التحويل اللي العميلة دفعته! (اكتب 0 لو مفيش تحويل)");
+    if (isDepositExceeding) return alert("المبلغ المحول أكبر من إجمالي الفاتورة ومصاريف الشحن!");
+    
+    const confirm = window.confirm("تأكيد طلب الأونلاين وإرسال التفاصيل لجروب تليجرام؟");
     if (!confirm) return;
 
     setIsProcessing(true);
     const result = await processOnlineOrder(
-      cart.map((c) => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
+      cart.map(c => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
       { name: customerName, phone: customerPhone, phone2: customerPhone2, city: customerCity, address: customerAddress },
       orderNotes,
       depositImages,
@@ -493,11 +492,11 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       calculatedDiscount,
       isExchange
     );
-
+    
     if ("error" in result && result.error) {
       alert("Error: " + result.error);
     } else {
-      setSuccessMsg(t("trans_340"));
+      setSuccessMsg("تم تسجيل الأونلاين بنجاح!");
       setCart([]);
       setCustomerName("");
       setCustomerPhone("");
@@ -516,24 +515,24 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   const handleAppendToOrder = async () => {
     if (cart.length === 0 || !appendInvoiceCode) return;
-
+    
     const confirm = window.confirm(`تأكيد إضافة المنتجات للفاتورة رقم ${appendInvoiceCode}؟`);
     if (!confirm) return;
 
     setIsProcessing(true);
     const result = await appendItemsToSale(
       appendInvoiceCode,
-      cart.map((c) => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
-      customerName || customerPhone ? { name: customerName, phone: customerPhone, phone2: customerPhone2, city: customerCity, address: customerAddress } : null,
+      cart.map(c => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
+      (customerName || customerPhone) ? { name: customerName, phone: customerPhone, phone2: customerPhone2, city: customerCity, address: customerAddress } : null,
       orderNotes,
       depositImages,
       String(customerDeposit)
     );
-
+    
     if ("error" in result && result.error) {
-      alert(t("trans_90") + result.error);
+      alert("خطأ: " + result.error);
     } else {
-      setSuccessMsg(t("trans_341"));
+      setSuccessMsg("تمت الإضافة للفاتورة بنجاح!");
       setCart([]);
       setShowAppendModal(false);
       setAppendInvoiceCode("");
@@ -545,13 +544,13 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
   const handleUpdateDepositPOS = async () => {
     if (!editDepositInvoiceCode || editDepositAmountPOS === "" || editDepositAmountPOS <= 0) return;
     if (!editDepositScreenshotPOS) {
-      alert(t("trans_179"));
+      alert("يجب إرفاق صورة التحويل.");
       return;
     }
     setIsUpdatingDepositPOS(true);
     try {
       const { updateSaleRemainingAmountByCode } = await import('@/app/dashboard/sales/actions');
-
+      
       const formData = new FormData();
       formData.append("invoiceCode", editDepositInvoiceCode);
       formData.append("additionalDeposit", String(editDepositAmountPOS));
@@ -561,7 +560,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       if (res.error) {
         alert(res.error);
       } else {
-        alert(t("trans_342"));
+        alert("تم تعديل المتبقي بنجاح وتحديث بوسطة (إن وجد) وإرسال إشعار تليجرام!");
         setShowEditDepositModal(false);
         setEditDepositInvoiceCode("");
         setEditDepositAmountPOS("");
@@ -580,7 +579,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     const { fetchSaleForEdit } = await import('@/app/pos/actions');
     const res = await fetchSaleForEdit(editInputCode);
     if (res.error || !res.sale) {
-      alert(res.error || t("trans_343"));
+      alert(res.error || "خطأ في جلب الفاتورة");
       setIsProcessing(false);
       return;
     }
@@ -593,24 +592,24 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     setDiscountValue(sale.discountAmount || "");
     setDiscountType("amount");
     setCustomerDeposit("");
-
+    
     const loadedCart = sale.items.map((item: any) => ({
-      id: item.productVariantId,
-      colorName: item.productVariant.colorName,
-      colorHex: item.productVariant.colorHex,
-      imageUrl: item.productVariant.imageUrl,
-      barcode: item.productVariant.barcode,
-      stock: item.productVariant.stock,
-      product: {
-        name: item.productVariant.product.name,
-        price: item.priceAtSale,
-        code: item.productVariant.product.code,
-        category: item.productVariant.product.category
-      },
-      quantity: item.quantity
+       id: item.productVariantId,
+       colorName: item.productVariant.colorName,
+       colorHex: item.productVariant.colorHex,
+       imageUrl: item.productVariant.imageUrl,
+       barcode: item.productVariant.barcode,
+       stock: item.productVariant.stock,
+       product: {
+         name: item.productVariant.product.name,
+         price: item.priceAtSale,
+         code: item.productVariant.product.code,
+         category: item.productVariant.product.category
+       },
+       quantity: item.quantity
     }));
     setCart(loadedCart);
-
+    
     setEditingSaleId(sale.id);
     setEditingInvoiceCode(sale.invoiceCode || "");
     setShowEditModal(false);
@@ -620,7 +619,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   const handleUpdateOrderCashier = async () => {
     if (!editingSaleId || cart.length === 0) return;
-
+    
     const confirm = window.confirm(`تأكيد حفظ التعديلات على الفاتورة ${editingInvoiceCode} بالكامل؟`);
     if (!confirm) return;
 
@@ -628,18 +627,18 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
     const { editOrderCashier } = await import('@/app/pos/actions');
     const result = await editOrderCashier(
       editingSaleId,
-      cart.map((c) => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
+      cart.map(c => ({ variantId: c.id, quantity: c.quantity, price: c.product.price, name: c.product.name, code: c.product.code, imageUrl: c.imageUrl })),
       { name: customerName, phone: customerPhone, phone2: customerPhone2, city: customerCity, address: customerAddress },
       orderNotes,
       depositImages,
       String(customerDeposit),
       calculatedDiscount
     );
-
+    
     if (result.error) {
       alert(result.error);
     } else {
-      setSuccessMsg(t("trans_344"));
+      setSuccessMsg("تم تعديل الفاتورة بنجاح!");
       setCart([]);
       setCustomerName("");
       setCustomerPhone("");
@@ -659,14 +658,14 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   const handleReservation = async () => {
     if (cart.length === 0) return;
-
+    
     const confirm = window.confirm(t("confirmReserve") || "Are you sure you want to reserve this item?");
     if (!confirm) return;
 
     setIsProcessing(true);
     // Defaulting to 1 day reservation for now
-    const result = await processReservation(cart.map((c) => ({ variantId: c.id, quantity: c.quantity })), 1);
-
+    const result = await processReservation(cart.map(c => ({ variantId: c.id, quantity: c.quantity })), 1);
+    
     if ("error" in result && result.error) {
       alert("Error: " + result.error);
     } else {
@@ -674,7 +673,7 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       setCart([]);
       setTimeout(() => {
         setSuccessMsg("");
-        window.location.reload();
+        window.location.reload(); 
       }, 2000);
     }
     setIsProcessing(false);
@@ -682,7 +681,6 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
 
   return (
     <div className="page-wrapper" style={{ flexDirection: "column", height: "100vh" }}>
-      {!activeShift && <ShiftManager userId={userId} userName={userRole} />}
       {/* Header */}
       <header style={{ background: "var(--secondary)", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -709,16 +707,16 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
           <div className="input-group" style={{ position: "relative", marginBottom: "1rem", display: "flex", gap: "0.5rem" }}>
             <div style={{ position: "relative", flexGrow: 1 }}>
               <Search size={20} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }} />
-              <input
-                type="text"
-                className="input-field"
+              <input 
+                type="text" 
+                className="input-field" 
                 style={{ paddingLeft: "3rem", fontSize: "1.1rem" }}
-                placeholder={(t("searchPosPlaceholder" as any) || "Search by Name, Code, Color, Price") + "..."}
+                placeholder={(t("searchPosPlaceholder" as any) || "Search by Name, Code, Color, Price") + "..."} 
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
                   if (e.key === 'Enter') {
-                    const variantByBarcode = variants.find((v) => v.barcode === searchQuery);
+                    const variantByBarcode = variants.find(v => v.barcode === searchQuery);
                     if (variantByBarcode) {
                       addToCart(variantByBarcode);
                       setSearchQuery("");
@@ -728,34 +726,34 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
                     }
                   }
                 }}
-                autoFocus />
-              
+                autoFocus
+              />
             </div>
-            <button onClick={() => setShowCamera(true)} className="btn btn-secondary" style={{ padding: "0 1rem", flexShrink: 0 }} title={t("trans_122")}>
+            <button onClick={() => setShowCamera(true)} className="btn btn-secondary" style={{ padding: "0 1rem", flexShrink: 0 }} title="سكانر الكاميرا">
               <Camera size={20} />
             </button>
           </div>
 
           <div style={{ display: "flex", flexShrink: 0, gap: "0.5rem", overflowX: "auto", paddingBottom: "1rem", marginBottom: "0.5rem", WebkitOverflowScrolling: "touch", msOverflowStyle: "none", scrollbarWidth: "none" }}>
-            {categories.map((cat) =>
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: "0.5rem 1.2rem",
-                borderRadius: "var(--radius-full)",
-                background: selectedCategory === cat ? "var(--primary)" : "var(--glass-bg)",
-                color: selectedCategory === cat ? "var(--background)" : "var(--foreground)",
-                border: `1px solid ${selectedCategory === cat ? "var(--primary)" : "var(--glass-border)"}`,
-                whiteSpace: "nowrap",
-                fontWeight: selectedCategory === cat ? "bold" : "normal",
-                transition: "all 0.2s",
-                flexShrink: 0
-              }}>
-              
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                style={{
+                  padding: "0.5rem 1.2rem",
+                  borderRadius: "var(--radius-full)",
+                  background: selectedCategory === cat ? "var(--primary)" : "var(--glass-bg)",
+                  color: selectedCategory === cat ? "var(--background)" : "var(--foreground)",
+                  border: `1px solid ${selectedCategory === cat ? "var(--primary)" : "var(--glass-border)"}`,
+                  whiteSpace: "nowrap",
+                  fontWeight: selectedCategory === cat ? "bold" : "normal",
+                  transition: "all 0.2s",
+                  flexShrink: 0
+                }}
+              >
                 {cat}
               </button>
-            )}
+            ))}
           </div>
 
           <div className="grid-cards" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "1rem" }}>
@@ -765,25 +763,25 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
                 acc.get(v.product.code)!.push(v);
                 return acc;
               }, new Map<number, VariantData[]>()).values()
-            ).slice(0, visibleCount).map((productVariants) =>
-            <POSProductCard
-              key={productVariants[0].product.code}
-              variants={productVariants}
-              onAddToCart={addToCart}
-              t={t} />
-
-            )}
+            ).slice(0, visibleCount).map((productVariants) => (
+              <POSProductCard 
+                key={productVariants[0].product.code} 
+                variants={productVariants} 
+                onAddToCart={addToCart} 
+                t={t} 
+              />
+            ))}
           </div>
           
-          {visibleCount < Array.from(new Set(filteredVariants.map((v) => v.product.code))).length &&
-          <button
-            onClick={() => setVisibleCount((prev) => prev + 30)}
-            className="btn btn-secondary"
-            style={{ width: "100%", padding: "1rem", marginTop: "1rem", border: "1px dashed var(--border)" }}>{t("trans_152")}
-
-
-          </button>
-          }
+          {visibleCount < Array.from(new Set(filteredVariants.map(v => v.product.code))).length && (
+            <button 
+              onClick={() => setVisibleCount(prev => prev + 30)} 
+              className="btn btn-secondary" 
+              style={{ width: "100%", padding: "1rem", marginTop: "1rem", border: "1px dashed var(--border)" }}
+            >
+              عرض المزيد...
+            </button>
+          )}
         </div>
 
         {/* Right Side: Cart */}
@@ -794,11 +792,11 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
           
           <div style={{ flexGrow: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
             <div style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem", minHeight: "150px" }}>
-              {cart.length === 0 ?
-              <div style={{ textAlign: "center", color: "#9ca3af", marginTop: "2rem" }}>{t("cartEmpty" as any) || "Cart is empty"}</div> :
-
-              cart.map((item) =>
-              <div key={item.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--background)", padding: "0.8rem", borderRadius: "var(--radius-md)" }}>
+              {cart.length === 0 ? (
+                <div style={{ textAlign: "center", color: "#9ca3af", marginTop: "2rem" }}>{t("cartEmpty" as any) || "Cart is empty"}</div>
+              ) : (
+              cart.map(item => (
+                <div key={item.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--background)", padding: "0.8rem", borderRadius: "var(--radius-md)" }}>
                   <div>
                     <div style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{item.product.name}</div>
                     <div style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{item.colorName} | {item.product.price}</div>
@@ -808,237 +806,237 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
                     <button onClick={() => removeFromCart(item.id)} className="btn btn-danger" style={{ padding: "0.3rem 0.5rem" }}>X</button>
                   </div>
                 </div>
-              )
-              }
+              ))
+            )}
             </div>
             
             <div style={{ padding: "0 1rem 1rem 1rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {cart.length > 0 &&
-              <div style={{ padding: "1rem", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "rgba(0,0,0,0.02)", display: "flex", flexDirection: "column" }}>
-                  <textarea
-                  id="magic-box"
-                  placeholder={t("trans_345")}
-                  value={magicText}
-                  onChange={(e) => {
-                    setMagicText(e.target.value);
-                    if (e.target.value.trim().length > 10) {
-                      processMagicText(e.target.value);
-                    }
-                  }}
-                  className="input-field"
-                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem", minHeight: "50px", resize: "vertical", borderColor: "var(--primary)", flexGrow: 1, borderStyle: "dashed" }} />
-                
-                <input
-                  type="text"
-                  placeholder={t("trans_346")}
+              {cart.length > 0 && (
+                <div style={{ padding: "1rem", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "rgba(0,0,0,0.02)", display: "flex", flexDirection: "column" }}>
+                  <textarea 
+                    id="magic-box"
+                    placeholder="الصق رسالة العميل هنا، أو اضغط Ctrl+V في أي مكان 🪄" 
+                    value={magicText}
+                    onChange={e => {
+                      setMagicText(e.target.value);
+                      if (e.target.value.trim().length > 10) {
+                        processMagicText(e.target.value);
+                      }
+                    }}
+                    className="input-field"
+                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem", minHeight: "50px", resize: "vertical", borderColor: "var(--primary)", flexGrow: 1, borderStyle: "dashed" }}
+                  />
+                <input 
+                  type="text" 
+                  placeholder="اسم العميل" 
                   value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
+                  onChange={e => setCustomerName(e.target.value)}
                   className="input-field"
-                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }} />
-                
+                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }}
+                />
                 <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
-                  <input
-                    type="text"
-                    placeholder={t("trans_347")}
+                  <input 
+                    type="text" 
+                    placeholder="رقم الموبايل (أساسي)" 
                     value={customerPhone}
-                    onChange={(e) => setCustomerPhone(toEnglishDigits(e.target.value))}
+                    onChange={e => setCustomerPhone(toEnglishDigits(e.target.value))}
                     className="input-field"
-                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 45%" }} />
-                  
-                  <input
-                    type="text"
-                    placeholder={t("trans_348")}
+                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 45%" }}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="رقم إضافي (اختياري)" 
                     value={customerPhone2}
-                    onChange={(e) => setCustomerPhone2(toEnglishDigits(e.target.value))}
+                    onChange={e => setCustomerPhone2(toEnglishDigits(e.target.value))}
                     className="input-field"
-                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 45%" }} />
-                  
-                  <input
-                    type="text"
-                    placeholder={t("trans_349")}
+                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 45%" }}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="المحافظة" 
                     value={customerCity}
-                    onChange={(e) => setCustomerCity(e.target.value)}
+                    onChange={e => setCustomerCity(e.target.value)}
                     className="input-field"
-                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 100%" }} />
-                  
+                    style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", flex: "1 1 100%" }}
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder={t("trans_350")}
+                <input 
+                  type="text" 
+                  placeholder="العنوان بالتفصيل" 
                   value={customerAddress}
-                  onChange={(e) => setCustomerAddress(e.target.value)}
+                  onChange={e => setCustomerAddress(e.target.value)}
                   className="input-field"
-                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }} />
-                
-                <input
-                  type="text"
-                  placeholder={t("trans_351")}
+                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }}
+                />
+                <input 
+                  type="text" 
+                  placeholder="الملحوظات (اختياري)" 
                   value={orderNotes}
-                  onChange={(e) => setOrderNotes(e.target.value)}
+                  onChange={e => setOrderNotes(e.target.value)}
                   className="input-field"
-                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }} />
-                
+                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem" }}
+                />
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem", padding: "0.5rem", background: "rgba(245, 158, 11, 0.1)", borderRadius: "var(--radius-sm)" }}>
                   <input
                     type="checkbox"
                     id="isExchange"
                     checked={isExchange}
                     onChange={(e) => setIsExchange(e.target.checked)}
-                    style={{ width: "20px", height: "20px" }} />
-                  
-                  <label htmlFor="isExchange" style={{ color: "var(--warning)", fontWeight: "bold", cursor: "pointer" }}>{t("trans_352")}
-
+                    style={{ width: "20px", height: "20px" }}
+                  />
+                  <label htmlFor="isExchange" style={{ color: "var(--warning)", fontWeight: "bold", cursor: "pointer" }}>
+                    هذا أوردر استبدال 🔄
                   </label>
                 </div>
-                <input
-                  type="number"
-                  placeholder={t("trans_353")}
+                <input 
+                  type="number" 
+                  placeholder="العميلة حولت كام؟ (مبلغ التحويل)" 
                   value={customerDeposit}
-                  onChange={(e) => setCustomerDeposit(e.target.value === "" ? "" : Number(toEnglishDigits(e.target.value)))}
+                  onChange={e => setCustomerDeposit(e.target.value === "" ? "" : Number(toEnglishDigits(e.target.value)))}
                   className="input-field"
-                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem", borderColor: isDepositExceeding ? "var(--danger)" : "" }} />
-                
-                {isDepositExceeding &&
-                <div style={{ color: "var(--danger)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>{t("trans_338")}
-
-                </div>
-                }
-                {cart.length > 0 && customerDeposit !== "" && !isDepositExceeding &&
-                <div style={{ background: "rgba(0,0,0,0.1)", padding: "0.5rem", borderRadius: "var(--radius-sm)", marginBottom: "0.5rem", fontSize: "0.85rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}><span>{t("trans_354")}</span> <span>{total}{t("trans_4")}</span></div>
-                    <div style={{ display: "flex", justifyContent: "space-between", color: "var(--warning)" }}><span>{t("trans_355")}</span> <span>{expectedShipping}{t("trans_4")}</span></div>
+                  style={{ fontSize: "0.9rem", padding: "0.5rem 1rem", marginBottom: "0.5rem", borderColor: isDepositExceeding ? "var(--danger)" : "" }}
+                />
+                {isDepositExceeding && (
+                  <div style={{ color: "var(--danger)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>
+                    المبلغ المحول أكبر من إجمالي الفاتورة ومصاريف الشحن!
+                  </div>
+                )}
+                {cart.length > 0 && customerDeposit !== "" && !isDepositExceeding && (
+                  <div style={{ background: "rgba(0,0,0,0.1)", padding: "0.5rem", borderRadius: "var(--radius-sm)", marginBottom: "0.5rem", fontSize: "0.85rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}><span>المنتجات:</span> <span>{total} ج.م</span></div>
+                    <div style={{ display: "flex", justifyContent: "space-between", color: "var(--warning)" }}><span>الشحن المتوقع:</span> <span>{expectedShipping} ج.م</span></div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", borderTop: "1px solid var(--border)", paddingTop: "0.3rem", marginTop: "0.3rem" }}>
-                      <span>{t("trans_356")}</span> <span>{finalRequired}{t("trans_4")}</span>
+                      <span>المطلوب الكلي:</span> <span>{finalRequired} ج.م</span>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", color: "var(--accent)", fontWeight: "bold", borderTop: "1px solid var(--border)", paddingTop: "0.3rem", marginTop: "0.3rem" }}>
-                      <span>{t("trans_357")}</span> <span>{remainingCOD}{t("trans_4")}</span>
+                      <span>المتبقي للتحصيل (COD):</span> <span>{remainingCOD} ج.م</span>
                     </div>
                   </div>
-                }
+                )}
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
                   <label className="btn btn-secondary" style={{ flex: 1, padding: "0.5rem", fontSize: "0.85rem", cursor: "pointer", display: "flex", justifyContent: "center", border: depositImages.length > 0 ? "1px solid var(--accent)" : "" }}>
-                    <ImageIcon size={16} /> {depositImages.length > 0 ? `تم إرفاق ${depositImages.length} صور` : t("trans_358")}
+                    <ImageIcon size={16} /> {depositImages.length > 0 ? `تم إرفاق ${depositImages.length} صور` : "إرفاق التحويل (يمكن اختيار أكثر من صورة)"}
                     <input type="file" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageUpload} />
                   </label>
-                  {depositImages.length > 0 &&
-                  <button onClick={() => setDepositImages([])} style={{ color: "var(--danger)", background: "none", border: "none", cursor: "pointer", fontSize: "0.85rem", padding: "0.5rem" }}>{t("trans_359")}</button>
-                  }
+                  {depositImages.length > 0 && (
+                    <button onClick={() => setDepositImages([])} style={{ color: "var(--danger)", background: "none", border: "none", cursor: "pointer", fontSize: "0.85rem", padding: "0.5rem" }}>X مسح الصور</button>
+                  )}
                 </div>
                 </div>
-              }
+              )}
 
-              {cart.length > 0 &&
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", background: "var(--background)", padding: "0.5rem", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
-                  <span style={{ fontSize: "0.9rem", fontWeight: "bold", whiteSpace: "nowrap" }}>{t("trans_360")}</span>
+              {cart.length > 0 && (
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", background: "var(--background)", padding: "0.5rem", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)" }}>
+                  <span style={{ fontSize: "0.9rem", fontWeight: "bold", whiteSpace: "nowrap" }}>الخصم:</span>
                   <input
-                  type="number"
-                  min="0"
-                  value={discountValue}
-                  onChange={(e) => setDiscountValue(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="input-field"
-                  style={{ padding: "0.4rem", margin: 0, minWidth: "60px", flexGrow: 1 }}
-                  placeholder="0" />
-                
-                  <select
-                  value={discountType}
-                  onChange={(e) => setDiscountType(e.target.value as "amount" | "percentage")}
-                  className="input-field"
-                  style={{ padding: "0.4rem", margin: 0, width: "auto" }}>
-                  
-                    <option value="amount">{t("trans_4")}</option>
+                    type="number"
+                    min="0"
+                    value={discountValue}
+                    onChange={e => setDiscountValue(e.target.value === "" ? "" : Number(e.target.value))}
+                    className="input-field"
+                    style={{ padding: "0.4rem", margin: 0, minWidth: "60px", flexGrow: 1 }}
+                    placeholder="0"
+                  />
+                  <select 
+                    value={discountType} 
+                    onChange={e => setDiscountType(e.target.value as "amount" | "percentage")}
+                    className="input-field"
+                    style={{ padding: "0.4rem", margin: 0, width: "auto" }}
+                  >
+                    <option value="amount">ج.م</option>
                     <option value="percentage">%</option>
                   </select>
                 </div>
-              }
-              {editingSaleId &&
-              <div style={{ background: "rgba(234, 179, 8, 0.1)", border: "1px solid var(--accent)", padding: "0.5rem", borderRadius: "var(--radius-sm)", textAlign: "center", color: "var(--accent)" }}>{t("trans_361")}
-                <strong>{editingInvoiceCode}</strong>
-                  <button onClick={() => {setEditingSaleId(null);setEditingInvoiceCode("");setCart([]);}} style={{ display: "block", width: "100%", background: "none", border: "none", color: "var(--danger)", cursor: "pointer", marginTop: "0.5rem" }}>{t("trans_362")}
-
-                </button>
+              )}
+              {editingSaleId && (
+                <div style={{ background: "rgba(234, 179, 8, 0.1)", border: "1px solid var(--accent)", padding: "0.5rem", borderRadius: "var(--radius-sm)", textAlign: "center", color: "var(--accent)" }}>
+                  جاري تعديل الفاتورة: <strong>{editingInvoiceCode}</strong>
+                  <button onClick={() => { setEditingSaleId(null); setEditingInvoiceCode(""); setCart([]); }} style={{ display: "block", width: "100%", background: "none", border: "none", color: "var(--danger)", cursor: "pointer", marginTop: "0.5rem" }}>
+                    إلغاء التعديل (تفريغ)
+                  </button>
                 </div>
-              }
+              )}
             </div>
           </div>
 
           <div style={{ padding: "1rem 1.5rem", borderTop: "2px solid var(--border)", background: "var(--background)", boxShadow: "0 -4px 10px rgba(0,0,0,0.05)", zIndex: 10 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem", color: "#9ca3af" }}>
-              <span>{t("trans_9")}</span>
+              <span>المجموع:</span>
               <span>{subtotal.toFixed(2)}</span>
             </div>
-            {calculatedDiscount > 0 &&
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem", color: "var(--accent)" }}>
-                <span>{t("trans_360")}</span>
+            {calculatedDiscount > 0 && (
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem", fontSize: "0.9rem", color: "var(--accent)" }}>
+                <span>الخصم:</span>
                 <span>-{calculatedDiscount.toFixed(2)}</span>
               </div>
-            }
+            )}
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem", fontSize: "1.2rem", fontWeight: "bold" }}>
-              <span>{t("trans_363")}</span>
+              <span>الإجمالي النهائي:</span>
               <span className="text-primary">{total.toFixed(2)}</span>
             </div>
             
-            {successMsg ?
-            <div style={{ color: "var(--accent)", display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "center", padding: "0.8rem" }}>
+            {successMsg ? (
+              <div style={{ color: "var(--accent)", display: "flex", alignItems: "center", gap: "0.5rem", justifyContent: "center", padding: "0.8rem" }}>
                 <CheckCircle /> {successMsg}
-              </div> :
-            editingSaleId ?
-            <button
-              onClick={handleUpdateOrderCashier}
-              disabled={cart.length === 0 || isProcessing}
-              className="btn btn-primary"
-              style={{ width: "100%", padding: "1rem", fontSize: "1.1rem", background: "var(--accent)", color: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-              
-                {isProcessing ? <><Loader2 className="animate-spin" size={18} />{t("trans_64")}</> : t("trans_364")}
-              </button> :
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              </div>
+            ) : editingSaleId ? (
+              <button 
+                onClick={handleUpdateOrderCashier}
+                disabled={cart.length === 0 || isProcessing}
+                className="btn btn-primary"
+                style={{ width: "100%", padding: "1rem", fontSize: "1.1rem", background: "var(--accent)", color: "var(--background)", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+              >
+                {isProcessing ? <><Loader2 className="animate-spin" size={18} /> جاري الحفظ...</> : "حفظ التعديلات في المخزن والتليجرام"}
+              </button>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                  onClick={handleCheckout}
-                  disabled={cart.length === 0 || isProcessing}
-                  className="btn btn-primary"
-                  style={{ flex: 1, padding: "1rem", fontSize: "1.1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                  
-                    {isProcessing ? <><Loader2 className="animate-spin" size={18} /> {t("processing" as any) || "Processing..."}</> : t("deductStock")}
+                  <button 
+                    onClick={handleCheckout} 
+                    disabled={cart.length === 0 || isProcessing}
+                    className="btn btn-primary" 
+                    style={{ flex: 1, padding: "1rem", fontSize: "1.1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+                  >
+                    {isProcessing ? <><Loader2 className="animate-spin" size={18} /> {(t("processing" as any) || "Processing...")}</> : t("deductStock")}
                   </button>
-                  <button
-                  onClick={handleReservation}
-                  disabled={cart.length === 0 || isProcessing}
-                  className="btn btn-secondary"
-                  style={{ padding: "1rem", display: "flex", justifyContent: "center", alignItems: "center" }}
-                  title={t("reserve")}>
-                  
+                  <button 
+                    onClick={handleReservation} 
+                    disabled={cart.length === 0 || isProcessing}
+                    className="btn btn-secondary" 
+                    style={{ padding: "1rem", display: "flex", justifyContent: "center", alignItems: "center" }}
+                    title={t("reserve")}
+                  >
                     {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Clock size={20} />}
                   </button>
                 </div>
-                {(depositImages.length > 0 || isTantaOrder) &&
-              <button
-                onClick={handleOnlineOrder}
-                disabled={isProcessing}
-                className="btn"
-                style={{ background: "#0ea5e9", color: "white", padding: "1rem", fontSize: "1.1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                
-                    {isProcessing ? <><Loader2 className="animate-spin" size={18} />{t("trans_365")}</> : <><Send size={18} />{t("trans_366")}</>}
+                {(depositImages.length > 0 || isTantaOrder) && (
+                  <button 
+                    onClick={handleOnlineOrder}
+                    disabled={isProcessing}
+                    className="btn"
+                    style={{ background: "#0ea5e9", color: "white", padding: "1rem", fontSize: "1.1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+                  >
+                    {isProcessing ? <><Loader2 className="animate-spin" size={18} /> جاري التأكيد...</> : <><Send size={18} /> تأكيد الأونلاين (Telegram)</>}
                   </button>
-              }
-                <button
-                onClick={() => setShowAppendModal(true)}
-                disabled={cart.length === 0 || isProcessing}
-                className="btn btn-secondary"
-                style={{ padding: "0.8rem", fontSize: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                
-                  <PlusCircle size={18} />{t("trans_367")}
-              </button>
-                <button
-                onClick={() => setShowEditModal(true)}
-                disabled={isProcessing}
-                className="btn btn-secondary"
-                style={{ padding: "0.8rem", fontSize: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", border: "1px solid var(--accent)", color: "var(--accent)" }}>{t("trans_368")}
-
-
-              </button>
+                )}
+                <button 
+                  onClick={() => setShowAppendModal(true)}
+                  disabled={cart.length === 0 || isProcessing}
+                  className="btn btn-secondary"
+                  style={{ padding: "0.8rem", fontSize: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+                >
+                  <PlusCircle size={18} /> إضافة لفاتورة سابقة
+                </button>
+                <button 
+                  onClick={() => setShowEditModal(true)}
+                  disabled={isProcessing}
+                  className="btn btn-secondary"
+                  style={{ padding: "0.8rem", fontSize: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", border: "1px solid var(--accent)", color: "var(--accent)" }}
+                >
+                  تعديل فاتورة بالكامل
+                </button>
               </div>
-            }
+            )}
             <div style={{ fontSize: "0.75rem", color: "var(--warning)", textAlign: "center", marginTop: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.3rem" }}>
                <AlertTriangle size={14} /> {t("confirmationRequired" as any) || "Confirmation required before deduction"}
             </div>
@@ -1048,34 +1046,34 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
       </div>
       
       {/* Receipt Modal */}
-      {receiptData &&
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
+      {receiptData && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
           <div style={{ background: "white", padding: "2rem", width: "320px", color: "black", fontFamily: "monospace", position: "relative" }} id="printable-receipt">
             <h2 style={{ textAlign: "center", borderBottom: "1px dashed black", paddingBottom: "1rem", marginBottom: "1rem" }}>AH Brand Store</h2>
             <p style={{ margin: "0.2rem 0" }}>Date: {receiptData.date.toLocaleString()}</p>
             {receiptData.invoiceCode && <p style={{ margin: "0.2rem 0", fontWeight: "bold" }}>Invoice: #{receiptData.invoiceCode}</p>}
-            {receiptData.customerData.name && <p style={{ margin: "0.2rem 0" }}>{t("trans_205")}{receiptData.customerData.name}</p>}
-            {receiptData.customerData.phone && <p style={{ margin: "0.2rem 0" }}>{t("trans_369")}{receiptData.customerData.phone}</p>}
-            {receiptData.customerData.address && <p style={{ margin: "0.2rem 0" }}>{t("trans_275")}{receiptData.customerData.city} - {receiptData.customerData.address}</p>}
-            {receiptData.orderNotes && <p style={{ margin: "0.2rem 0" }}>{t("trans_370")}{receiptData.orderNotes}</p>}
+            {receiptData.customerData.name && <p style={{ margin: "0.2rem 0" }}>العميل: {receiptData.customerData.name}</p>}
+            {receiptData.customerData.phone && <p style={{ margin: "0.2rem 0" }}>ت: {receiptData.customerData.phone}</p>}
+            {receiptData.customerData.address && <p style={{ margin: "0.2rem 0" }}>العنوان: {receiptData.customerData.city} - {receiptData.customerData.address}</p>}
+            {receiptData.orderNotes && <p style={{ margin: "0.2rem 0" }}>ملاحظات: {receiptData.orderNotes}</p>}
             <div style={{ borderBottom: "1px dashed black", margin: "1rem 0" }} />
-            {receiptData.cart.map((item) =>
-          <div key={item.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                <span style={{ maxWidth: "70%" }}>{item.quantity}x {item.product.name} <br /><small>{item.colorName} | #{item.product.code}</small></span>
+            {receiptData.cart.map(item => (
+              <div key={item.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                <span style={{ maxWidth: "70%" }}>{item.quantity}x {item.product.name} <br/><small>{item.colorName} | #{item.product.code}</small></span>
                 <span>{(item.quantity * item.product.price).toFixed(2)}</span>
               </div>
-          )}
+            ))}
             <div style={{ borderBottom: "1px dashed black", margin: "1rem 0" }} />
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem" }}>
               <span>Subtotal:</span>
               <span>{(receiptData.total + (receiptData.discountAmount || 0)).toFixed(2)} EGP</span>
             </div>
-            {receiptData.discountAmount ?
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", color: "#555" }}>
+            {receiptData.discountAmount ? (
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", color: "#555" }}>
                 <span>Discount:</span>
                 <span>-{receiptData.discountAmount.toFixed(2)} EGP</span>
-              </div> :
-          null}
+              </div>
+            ) : null}
             <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: "1.2rem", marginTop: "0.5rem" }}>
               <span>Total:</span>
               <span>{receiptData.total.toFixed(2)} EGP</span>
@@ -1084,140 +1082,140 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
           </div>
           
           <div className="no-print" style={{ position: "absolute", top: "2rem", right: "2rem", display: "flex", gap: "1rem" }}>
-            <button onClick={() => {window.print();}} className="btn btn-primary">Print Receipt</button>
-            <button onClick={() => {setReceiptData(null);window.location.reload();}} className="btn btn-secondary">Close</button>
+            <button onClick={() => { window.print(); }} className="btn btn-primary">Print Receipt</button>
+            <button onClick={() => { setReceiptData(null); window.location.reload(); }} className="btn btn-secondary">Close</button>
           </div>
         </div>
-      }
+      )}
 
       {/* Camera Scanner Modal */}
-      {showCamera &&
-      <CameraScanner
-        onScan={(text) => {
-          setShowCamera(false);
-          const variant = variants.find((v) => v.barcode === text);
-          if (variant) {
-            addToCart(variant);
-          } else {
-            alert(t("barcodeNotFound" as any) || "Barcode not found: " + text);
-          }
-        }}
-        onClose={() => setShowCamera(false)} />
-
-      }
+      {showCamera && (
+        <CameraScanner 
+          onScan={(text) => {
+            setShowCamera(false);
+            const variant = variants.find(v => v.barcode === text);
+            if (variant) {
+              addToCart(variant);
+            } else {
+              alert(t("barcodeNotFound" as any) || "Barcode not found: " + text);
+            }
+          }}
+          onClose={() => setShowCamera(false)}
+        />
+      )}
 
       {/* Edit Full Order Modal */}
-      {showEditModal &&
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
+      {showEditModal && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
           <div className="glass-panel" style={{ padding: "2rem", width: "400px", maxWidth: "90%" }}>
-            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>{t("trans_368")}</h2>
-            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>{t("trans_371")}</p>
+            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>تعديل فاتورة بالكامل</h2>
+            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>أدخل رقم الفاتورة (مثال: 240626-1) عشان نحملها وتقدر تعدل فيها أي حاجة زي الموبايل، المحافظة، أو المنتجات.</p>
             
-            <input
-            type="text"
-            placeholder={t("trans_372")}
-            className="input-field"
-            value={editInputCode}
-            onChange={(e) => setEditInputCode(e.target.value)}
-            style={{ marginBottom: "1.5rem" }}
-            autoFocus />
-          
+            <input 
+              type="text" 
+              placeholder="رقم الفاتورة..." 
+              className="input-field" 
+              value={editInputCode}
+              onChange={e => setEditInputCode(e.target.value)}
+              style={{ marginBottom: "1.5rem" }}
+              autoFocus
+            />
 
             <div style={{ display: "flex", gap: "1rem" }}>
               <button onClick={handleLoadInvoiceForEdit} disabled={!editInputCode || isProcessing} className="btn btn-primary" style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                {isProcessing ? <><Loader2 className="animate-spin" size={18} />{t("trans_51")}</> : t("trans_373")}
+                {isProcessing ? <><Loader2 className="animate-spin" size={18} /> جاري التحميل...</> : "تحميل الفاتورة"}
               </button>
-              <button onClick={() => setShowEditModal(false)} className="btn btn-secondary">{t("trans_100")}</button>
+              <button onClick={() => setShowEditModal(false)} className="btn btn-secondary">إلغاء</button>
             </div>
           </div>
         </div>
-      }
+      )}
 
       {/* Append to Order Modal */}
-      {showAppendModal &&
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
+      {showAppendModal && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100 }}>
           <div className="glass-panel" style={{ padding: "2rem", width: "400px", maxWidth: "90%" }}>
-            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>{t("trans_374")}</h2>
-            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>{t("trans_375")}</p>
+            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>إضافة المنتجات لفاتورة سابقة</h2>
+            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>أدخل رقم الفاتورة القديمة (مثال: 240626-1) عشان نضيف القطع دي عليها.</p>
             
-            <input
-            type="text"
-            placeholder={t("trans_372")}
-            className="input-field"
-            value={appendInvoiceCode}
-            onChange={(e) => setAppendInvoiceCode(e.target.value)}
-            style={{ marginBottom: "1.5rem" }}
-            autoFocus />
-          
+            <input 
+              type="text" 
+              placeholder="رقم الفاتورة..." 
+              className="input-field" 
+              value={appendInvoiceCode}
+              onChange={e => setAppendInvoiceCode(e.target.value)}
+              style={{ marginBottom: "1.5rem" }}
+              autoFocus
+            />
 
             <div style={{ display: "flex", gap: "1rem" }}>
               <button onClick={handleAppendToOrder} disabled={!appendInvoiceCode || isProcessing} className="btn btn-primary" style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-                {isProcessing ? <><Loader2 className="animate-spin" size={18} />{t("trans_376")}</> : t("trans_377")}
+                {isProcessing ? <><Loader2 className="animate-spin" size={18} /> جاري الإضافة...</> : "تأكيد الإضافة"}
               </button>
-              <button onClick={() => setShowAppendModal(false)} className="btn btn-secondary">{t("trans_100")}</button>
+              <button onClick={() => setShowAppendModal(false)} className="btn btn-secondary">إلغاء</button>
             </div>
           </div>
         </div>
-      }
+      )}
 
       {/* Edit Deposit Modal (POS) */}
-      {showEditDepositModal &&
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-        background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100
-      }}>
+      {showEditDepositModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 100
+        }}>
           <div className="glass-panel" style={{ padding: "2rem", width: "400px", maxWidth: "90%" }}>
-            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>{t("trans_378")}</h2>
-            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>{t("trans_379")}
-
-          </p>
+            <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>تعديل تحصيل لفاتورة</h2>
+            <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: "0.9rem" }}>
+              أدخل رقم الفاتورة والمبلغ الإضافي اللي العميل حوله عشان يتخصم من التحصيل (وهيتحدث في بوسطة أوتوماتيك لو مبعوت).
+            </p>
             
-            <input
-            type="text"
-            placeholder={t("trans_380")}
-            className="input-field"
-            value={editDepositInvoiceCode}
-            onChange={(e) => setEditDepositInvoiceCode(e.target.value)}
-            style={{ marginBottom: "1rem" }}
-            autoFocus />
-          
+            <input 
+              type="text" 
+              placeholder="رقم الفاتورة (مثال: 240626-1)" 
+              className="input-field" 
+              value={editDepositInvoiceCode}
+              onChange={e => setEditDepositInvoiceCode(e.target.value)}
+              style={{ marginBottom: "1rem" }}
+              autoFocus
+            />
 
-            <input
-            type="number"
-            placeholder={t("trans_381")}
-            className="input-field"
-            value={editDepositAmountPOS}
-            onChange={(e) => setEditDepositAmountPOS(e.target.value === "" ? "" : Number(toEnglishDigits(e.target.value)))}
-            style={{ marginBottom: "1rem" }} />
-          
+            <input 
+              type="number" 
+              placeholder="قيمة التحويل الإضافي (مثال: 200)" 
+              className="input-field" 
+              value={editDepositAmountPOS}
+              onChange={e => setEditDepositAmountPOS(e.target.value === "" ? "" : Number(toEnglishDigits(e.target.value)))}
+              style={{ marginBottom: "1rem" }}
+            />
 
-            <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem" }}>{t("trans_216")}</label>
-            <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                setEditDepositScreenshotPOS(e.target.files[0]);
-              }
-            }}
-            className="input-field"
-            style={{ marginBottom: "1.5rem", padding: "0.5rem" }} />
-          
+            <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem" }}>إرفاق صورة التحويل (إجباري):</label>
+            <input 
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setEditDepositScreenshotPOS(e.target.files[0]);
+                }
+              }}
+              className="input-field"
+              style={{ marginBottom: "1.5rem", padding: "0.5rem" }}
+            />
 
             <div style={{ display: "flex", gap: "1rem" }}>
-              <button
-              onClick={handleUpdateDepositPOS}
-              disabled={!editDepositInvoiceCode || editDepositAmountPOS === "" || editDepositAmountPOS <= 0 || !editDepositScreenshotPOS || isUpdatingDepositPOS}
-              className="btn btn-primary"
-              style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
-              
-                {isUpdatingDepositPOS ? <><Loader2 className="animate-spin" size={18} />{t("trans_218")}</> : t("trans_382")}
+              <button 
+                onClick={handleUpdateDepositPOS} 
+                disabled={!editDepositInvoiceCode || editDepositAmountPOS === "" || editDepositAmountPOS <= 0 || !editDepositScreenshotPOS || isUpdatingDepositPOS} 
+                className="btn btn-primary" 
+                style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+              >
+                {isUpdatingDepositPOS ? <><Loader2 className="animate-spin" size={18} /> جاري التحديث...</> : "تأكيد وتحديث بوسطة"}
               </button>
-              <button onClick={() => {setShowEditDepositModal(false);setEditDepositScreenshotPOS(null);}} className="btn btn-secondary" disabled={isUpdatingDepositPOS}>{t("trans_100")}</button>
+              <button onClick={() => { setShowEditDepositModal(false); setEditDepositScreenshotPOS(null); }} className="btn btn-secondary" disabled={isUpdatingDepositPOS}>إلغاء</button>
             </div>
           </div>
         </div>
-      }
+      )}
 
       <style>{`
         .hover-bg:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-glow); }
@@ -1270,6 +1268,6 @@ export default function POSClient({ variants, userRole, activeShift, userId }: {
           }
         }
       `}</style>
-    </div>);
-
+    </div>
+  );
 }

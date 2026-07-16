@@ -32,7 +32,7 @@ export default function Navbar() {
           style={{ padding: "0.5rem" }}>
           
           <Globe size={20} />
-          <span style={{ margin: "0 0.5rem" }}>{language === "ar" ? "EN" : t("trans_308")}</span>
+          <span style={{ margin: "0 0.5rem" }}>{language === "ar" ? "EN" : "عربي"}</span>
         </button>
         <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}

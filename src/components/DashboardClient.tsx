@@ -1,14 +1,13 @@
 "use client";
-import { useSettings } from "@/lib/SettingsContext";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid, LineChart, Line } from
-"recharts";
-import {
-  DollarSign, ShoppingBag, ArrowDownLeft, TrendingUp, TrendingDown, Calendar, Search, Users, RefreshCcw, Percent, Loader2, ShoppingCart } from
-"lucide-react";
+import { 
+  BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid, LineChart, Line 
+} from "recharts";
+import { 
+  DollarSign, ShoppingBag, ArrowDownLeft, TrendingUp, TrendingDown, Calendar, Search, Users, RefreshCcw, Percent, Loader2, ShoppingCart
+} from "lucide-react";
 import { EmployeePerformanceChart } from "./DashboardCharts";
 
 interface DashboardData {
@@ -21,15 +20,14 @@ interface DashboardData {
     returnsValue: number;
     returnsRatio: number;
   };
-  dailyRevenue: {date: string;revenue: number;}[];
-  bestSellers: {name: string;code: number;quantity: number;}[];
-  slowMovers: {name: string;code: number;quantity: number;}[];
-  employeePerformance: Record<string, {total: number;count: number;}>;
-  appendedOrders: {invoiceCode: string;timesAppended: number;currentStatus: string;originalDate: string;}[];
+  dailyRevenue: { date: string; revenue: number }[];
+  bestSellers: { name: string; code: number; quantity: number }[];
+  slowMovers: { name: string; code: number; quantity: number }[];
+  employeePerformance: Record<string, { total: number, count: number }>;
+  appendedOrders: { invoiceCode: string, timesAppended: number, currentStatus: string, originalDate: string }[];
 }
 
-export default function DashboardClient({ data, initialFrom, initialTo }: {data: DashboardData;initialFrom: string;initialTo: string;}) {
-  const { t } = useSettings();
+export default function DashboardClient({ data, initialFrom, initialTo }: { data: DashboardData, initialFrom: string, initialTo: string }) {
   const router = useRouter();
   const [fromDate, setFromDate] = useState(initialFrom);
   const [toDate, setToDate] = useState(initialTo);
@@ -45,8 +43,8 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
     <div className="animate-fade-in" style={{ padding: "0 1rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem", marginBottom: "3rem" }}>
         <div>
-          <h1 style={{ fontSize: "2.4rem", fontWeight: "900", letterSpacing: "-0.5px", marginBottom: "0.2rem", color: "var(--foreground)" }}>{t("trans_220")}
-
+          <h1 style={{ fontSize: "2.4rem", fontWeight: "900", letterSpacing: "-0.5px", marginBottom: "0.2rem", color: "var(--foreground)" }}>
+            مرحباً، إليك ما يحدث في متجرك
           </h1>
         </div>
 
@@ -54,18 +52,18 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
           <div style={{ display: "flex", background: "white", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)", overflow: "hidden" }}>
             <button type="button" onClick={() => {
               const today = new Date().toISOString().split('T')[0];
-              setFromDate(today);setToDate(today);
-            }} style={{ padding: "0.6rem 1rem", borderRight: "1px solid var(--border)", background: "transparent", borderTop: "none", borderBottom: "none", borderLeft: "none", cursor: "pointer", fontSize: "0.85rem" }}>{t("trans_221")}</button>
+              setFromDate(today); setToDate(today);
+            }} style={{ padding: "0.6rem 1rem", borderRight: "1px solid var(--border)", background: "transparent", borderTop: "none", borderBottom: "none", borderLeft: "none", cursor: "pointer", fontSize: "0.85rem" }}>اليوم</button>
             <button type="button" onClick={() => {
               const today = new Date();
               const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-              setFromDate(weekAgo);setToDate(today.toISOString().split('T')[0]);
-            }} style={{ padding: "0.6rem 1rem", borderRight: "1px solid var(--border)", background: "transparent", borderTop: "none", borderBottom: "none", borderLeft: "none", cursor: "pointer", fontSize: "0.85rem" }}>{t("trans_222")}</button>
+              setFromDate(weekAgo); setToDate(today.toISOString().split('T')[0]);
+            }} style={{ padding: "0.6rem 1rem", borderRight: "1px solid var(--border)", background: "transparent", borderTop: "none", borderBottom: "none", borderLeft: "none", cursor: "pointer", fontSize: "0.85rem" }}>هذا الأسبوع</button>
             <button type="button" onClick={() => {
               const today = new Date();
               const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-              setFromDate(firstDay);setToDate(today.toISOString().split('T')[0]);
-            }} style={{ padding: "0.6rem 1rem", background: "transparent", border: "none", cursor: "pointer", fontSize: "0.85rem" }}>{t("trans_223")}</button>
+              setFromDate(firstDay); setToDate(today.toISOString().split('T')[0]);
+            }} style={{ padding: "0.6rem 1rem", background: "transparent", border: "none", cursor: "pointer", fontSize: "0.85rem" }}>هذا الشهر</button>
           </div>
           <div style={{ display: "flex", alignItems: "center", background: "white", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)", padding: "0 0.5rem" }}>
              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} style={{ border: "none", padding: "0.5rem", background: "transparent", outline: "none" }} />
@@ -84,41 +82,41 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
         <div className="glass-panel" style={{ padding: "2rem", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem" }}>
             <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#666", marginBottom: "0.5rem" }}>{t("trans_224")}</h3>
+              <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#666", marginBottom: "0.5rem" }}>إجمالي المبيعات (Gross)</h3>
               <div style={{ fontSize: "2.8rem", fontWeight: "900", letterSpacing: "-1px" }}>
-                {data.summary.grossSales.toLocaleString()}{t("trans_4")}
+                {data.summary.grossSales.toLocaleString()} ج.م
               </div>
-              <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>{t("trans_225")}
-                <strong style={{ color: "var(--foreground)" }}>{data.summary.netSales.toLocaleString()}{t("trans_4")}</strong>
+              <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>
+                صافي المبيعات الفعلي: <strong style={{ color: "var(--foreground)" }}>{data.summary.netSales.toLocaleString()} ج.م</strong>
               </p>
             </div>
             <div style={{ textAlign: "right" }}>
-              <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#666", marginBottom: "0.5rem" }}>{t("trans_226")}</h3>
+              <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#666", marginBottom: "0.5rem" }}>المرتجعات</h3>
               <div style={{ fontSize: "1.8rem", fontWeight: "800", letterSpacing: "-0.5px" }}>
-                {data.summary.returnsValue.toLocaleString()}{t("trans_4")}
+                {data.summary.returnsValue.toLocaleString()} ج.م
               </div>
-              <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>{t("trans_227")}
-                <strong style={{ color: "var(--foreground)" }}>{data.summary.returnsRatio.toFixed(1)}%</strong>
+              <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "0.5rem" }}>
+                نسبة المرتجع: <strong style={{ color: "var(--foreground)" }}>{data.summary.returnsRatio.toFixed(1)}%</strong>
               </p>
             </div>
           </div>
           
           <div style={{ height: "280px", width: "100%", marginTop: "auto" }}>
-            {data.dailyRevenue.length === 0 ?
-            <div style={{ textAlign: "center", paddingTop: "5rem", color: "#9ca3af" }}>{t("trans_228")}</div> :
-
-            <ResponsiveContainer width="100%" height="100%">
+            {data.dailyRevenue.length === 0 ? (
+              <div style={{ textAlign: "center", paddingTop: "5rem", color: "#9ca3af" }}>لا توجد مبيعات في هذه الفترة</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data.dailyRevenue} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                   <YAxis hide domain={['dataMin - 1000', 'dataMax + 1000']} />
-                  <RechartsTooltip
-                  cursor={{ stroke: 'rgba(0,0,0,0.1)', strokeWidth: 1, strokeDasharray: '5 5' }}
-                  contentStyle={{ backgroundColor: "#1c1c1c", borderColor: "#1c1c1c", color: "#fff", borderRadius: "8px", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }}
-                  itemStyle={{ color: "var(--primary)", fontWeight: "bold" }} />
-                
-                  <Line type="monotone" dataKey="revenue" name={t("trans_229")} stroke="var(--primary)" strokeWidth={4} dot={false} activeDot={{ r: 8, fill: "var(--sidebar-bg)", stroke: "var(--primary)", strokeWidth: 3 }} />
+                  <RechartsTooltip 
+                    cursor={{ stroke: 'rgba(0,0,0,0.1)', strokeWidth: 1, strokeDasharray: '5 5' }}
+                    contentStyle={{ backgroundColor: "#1c1c1c", borderColor: "#1c1c1c", color: "#fff", borderRadius: "8px", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" }} 
+                    itemStyle={{ color: "var(--primary)", fontWeight: "bold" }}
+                  />
+                  <Line type="monotone" dataKey="revenue" name="المبيعات (ج.م)" stroke="var(--primary)" strokeWidth={4} dot={false} activeDot={{ r: 8, fill: "var(--sidebar-bg)", stroke: "var(--primary)", strokeWidth: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
-            }
+            )}
           </div>
         </div>
 
@@ -127,25 +125,25 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
           
           <div className="glass-panel" style={{ padding: "1.5rem" }}>
             <h3 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <ArrowDownLeft size={20} />{t("trans_230")}
+              <ArrowDownLeft size={20} /> الخصومات الممنوحة
             </h3>
-            <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem" }}>{t("trans_231")}
-
+            <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem" }}>
+              إجمالي الخصومات التي منحها الموظفون للعملاء في هذه الفترة.
             </p>
             <div style={{ fontSize: "2rem", fontWeight: "800", letterSpacing: "-1px" }}>
-              {data.summary.totalDiscounts.toLocaleString()}{t("trans_4")}
+              {data.summary.totalDiscounts.toLocaleString()} ج.م
             </div>
           </div>
 
           <div className="glass-panel" style={{ padding: "1.5rem", flexGrow: 1 }}>
             <h3 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <ShoppingCart size={20} />{t("trans_232")}
+              <ShoppingCart size={20} /> القطع المباعة
             </h3>
-            <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem" }}>{t("trans_233")}
-
+            <p style={{ color: "#666", fontSize: "0.9rem", marginBottom: "1rem" }}>
+              إجمالي عدد الشنط المباعة (شاملة المرتجعات).
             </p>
             <div style={{ fontSize: "2rem", fontWeight: "800", letterSpacing: "-1px" }}>
-              {data.summary.returnsCount} / {data.summary.totalOrders}{t("trans_234")}
+              {data.summary.returnsCount} / {data.summary.totalOrders} طلب
             </div>
           </div>
 
@@ -156,40 +154,40 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
         {/* Best and Worst Sellers */}
         <div className="glass-panel" style={{ padding: "2rem" }}>
           <h2 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <TrendingUp size={20} className="text-primary" />{t("trans_235")}
+            <TrendingUp size={20} className="text-primary" /> المنتجات الأكثر مبيعاً
           </h2>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "right" }}>
             <tbody>
-              {data.bestSellers.length === 0 ?
-              <tr><td style={{ color: "#9ca3af", textAlign: "center", padding: "1rem" }}>{t("trans_236")}</td></tr> :
-
-              data.bestSellers.map((item, i) =>
-              <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
+              {data.bestSellers.length === 0 ? (
+                <tr><td style={{ color: "#9ca3af", textAlign: "center", padding: "1rem" }}>لا توجد مبيعات.</td></tr>
+              ) : (
+                data.bestSellers.map((item, i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
                     <td style={{ padding: "0.8rem 0" }}>{i + 1}. {item.name} <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>#{item.code}</span></td>
-                    <td style={{ padding: "0.8rem 0", fontWeight: "bold", color: "var(--foreground)" }}>{item.quantity}{t("trans_237")}</td>
+                    <td style={{ padding: "0.8rem 0", fontWeight: "bold", color: "var(--foreground)" }}>{item.quantity} قطعة</td>
                   </tr>
-              )
-              }
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
         <div className="glass-panel" style={{ padding: "2rem" }}>
           <h2 style={{ fontSize: "1.1rem", fontWeight: "700", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem", color: "#f87171" }}>
-            <TrendingDown size={20} />{t("trans_238")}
+            <TrendingDown size={20} /> المنتجات الأقل مبيعاً
           </h2>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "right" }}>
             <tbody>
-              {data.slowMovers.length === 0 ?
-              <tr><td style={{ color: "#9ca3af", textAlign: "center", padding: "1rem" }}>{t("trans_236")}</td></tr> :
-
-              data.slowMovers.map((item, i) =>
-              <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
+              {data.slowMovers.length === 0 ? (
+                <tr><td style={{ color: "#9ca3af", textAlign: "center", padding: "1rem" }}>لا توجد مبيعات.</td></tr>
+              ) : (
+                data.slowMovers.map((item, i) => (
+                  <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
                     <td style={{ padding: "0.8rem 0" }}>{item.name} <span style={{ color: "#9ca3af", fontSize: "0.85rem" }}>#{item.code}</span></td>
-                    <td style={{ padding: "0.8rem 0", fontWeight: "bold", color: "#f87171" }}>{item.quantity}{t("trans_237")}</td>
+                    <td style={{ padding: "0.8rem 0", fontWeight: "bold", color: "#f87171" }}>{item.quantity} قطعة</td>
                   </tr>
-              )
-              }
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -199,53 +197,53 @@ export default function DashboardClient({ data, initialFrom, initialTo }: {data:
         {/* Employee Performance */}
         <div className="glass-panel" style={{ padding: "1.5rem" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Users size={20} className="text-primary" />{t("trans_239")}
+            <Users size={20} className="text-primary" /> أداء الموظفين
           </h2>
           <EmployeePerformanceChart data={data.employeePerformance} />
         </div>
       </div>
 
       {/* Appended Orders Section */}
-      {data.appendedOrders && data.appendedOrders.length > 0 &&
-      <div style={{ marginTop: "2rem" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "var(--warning)" }}>{t("trans_240")}
-
-        </h2>
+      {data.appendedOrders && data.appendedOrders.length > 0 && (
+        <div style={{ marginTop: "2rem" }}>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "var(--warning)" }}>
+            ⚠️ أوردرات تم تعديلها وتزويدها
+          </h2>
           <div className="glass-panel" style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.95rem" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.02)" }}>
-                  <th style={{ padding: "1rem", textAlign: "right" }}>{t("trans_241")}</th>
-                  <th style={{ padding: "1rem", textAlign: "right" }}>{t("trans_242")}</th>
-                  <th style={{ padding: "1rem", textAlign: "right" }}>{t("trans_243")}</th>
-                  <th style={{ padding: "1rem", textAlign: "right" }}>{t("trans_244")}</th>
+                  <th style={{ padding: "1rem", textAlign: "right" }}>كود الفاتورة</th>
+                  <th style={{ padding: "1rem", textAlign: "right" }}>عدد مرات التزويد</th>
+                  <th style={{ padding: "1rem", textAlign: "right" }}>تاريخ الفاتورة الأصلي</th>
+                  <th style={{ padding: "1rem", textAlign: "right" }}>حالة الأوردر الحالية</th>
                 </tr>
               </thead>
               <tbody>
-                {data.appendedOrders.map((order) =>
-              <tr key={order.invoiceCode} style={{ borderBottom: "1px solid var(--border)" }}>
+                {data.appendedOrders.map((order) => (
+                  <tr key={order.invoiceCode} style={{ borderBottom: "1px solid var(--border)" }}>
                     <td style={{ padding: "1rem", fontWeight: "bold" }}>{order.invoiceCode}</td>
-                    <td style={{ padding: "1rem", color: "var(--warning)", fontWeight: "bold" }}>{order.timesAppended}{t("trans_245")}</td>
+                    <td style={{ padding: "1rem", color: "var(--warning)", fontWeight: "bold" }}>{order.timesAppended} مرة</td>
                     <td style={{ padding: "1rem", color: "var(--muted)" }}>{order.originalDate}</td>
                     <td style={{ padding: "1rem" }}>
                       <span style={{
-                    padding: "0.2rem 0.6rem",
-                    borderRadius: "1rem",
-                    fontSize: "0.8rem",
-                    background: order.currentStatus === "PRINTED" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
-                    color: order.currentStatus === "PRINTED" ? "#22c55e" : "#eab308"
-                  }}>
+                        padding: "0.2rem 0.6rem",
+                        borderRadius: "1rem",
+                        fontSize: "0.8rem",
+                        background: order.currentStatus === "PRINTED" ? "rgba(34,197,94,0.1)" : "rgba(234,179,8,0.1)",
+                        color: order.currentStatus === "PRINTED" ? "#22c55e" : "#eab308"
+                      }}>
                         {order.currentStatus}
                       </span>
                     </td>
                   </tr>
-              )}
+                ))}
               </tbody>
             </table>
           </div>
         </div>
-      }
+      )}
 
-    </div>);
-
+    </div>
+  );
 }

@@ -22,7 +22,7 @@ export default async function ExpensesPage() {
   return (
     <div className="animate-fade-in">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>{t("trans_53")}</h1>
+        <h1 style={{ fontSize: "2rem", margin: 0 }}>{"إدارة المصروفات"}</h1>
         <a
           href="/api/export?type=expenses"
           target="_blank"
@@ -37,32 +37,32 @@ export default async function ExpensesPage() {
         {/* Add Expense Form */}
         <div className="glass-panel" style={{ padding: "1.5rem", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Plus size={20} className="text-primary" />{t("trans_54")}
+            <Plus size={20} className="text-primary" />{"إضافة مصروف جديد"}
           </h2>
           
           <form action={createExpense} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="description">{t("trans_55")}</label>
-              <input className="input-field" type="text" id="description" name="description" required placeholder={t("trans_56")} />
+              <label className="input-label" htmlFor="description">{"وصف المصروف"}</label>
+              <input className="input-field" type="text" id="description" name="description" required placeholder={"مثال: إيجار، كهرباء، شنط..."} />
             </div>
             
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="amount">{t("trans_57")}</label>
+              <label className="input-label" htmlFor="amount">{"المبلغ (جنيه)"}</label>
               <input className="input-field" type="number" step="0.01" id="amount" name="amount" required placeholder="0.00" />
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="type">{t("trans_58")}</label>
+              <label className="input-label" htmlFor="type">{"نوع المصروف"}</label>
               <select className="input-field" id="type" name="type" required defaultValue="GENERAL">
-                <option value="GENERAL">{t("trans_59")}</option>
-                <option value="PARTNER_SPECIFIC">{t("trans_60")}</option>
+                <option value="GENERAL">{"مصروف عام (يخصم من كل الشركاء)"}</option>
+                <option value="PARTNER_SPECIFIC">{"مصروف خاص بشريك (يخصم من شريك معين)"}</option>
               </select>
             </div>
             
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="partnerId">{t("trans_61")}</label>
+              <label className="input-label" htmlFor="partnerId">{"الشريك (إذا كان المصروف خاص به)"}</label>
               <select className="input-field" id="partnerId" name="partnerId">
-                <option value="">{t("trans_50")}</option>
+                <option value="">{"-- اختر الشريك --"}</option>
                 {partners.map((p) =>
                 <option key={p.id} value={p.id}>{p.name}</option>
                 )}
@@ -70,12 +70,12 @@ export default async function ExpensesPage() {
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="date">{t("trans_62")}</label>
+              <label className="input-label" htmlFor="date">{"تاريخ المصروف"}</label>
               <input className="input-field" type="date" id="date" name="date" />
-              <small style={{ color: "#9ca3af", marginTop: "0.2rem", display: "block" }}>{t("trans_63")}</small>
+              <small style={{ color: "#9ca3af", marginTop: "0.2rem", display: "block" }}>{"اتركه فارغاً ليسجل بتاريخ اليوم"}</small>
             </div>
             
-            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("trans_64")}>{t("trans_65")}
+            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={"جاري الحفظ..."}>{"حفظ المصروف"}
 
             </SubmitButton>
           </form>
@@ -84,24 +84,24 @@ export default async function ExpensesPage() {
         {/* Expenses List */}
         <div className="glass-panel" style={{ padding: "1.5rem" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Wallet size={20} className="text-primary" />{t("trans_66")}
+            <Wallet size={20} className="text-primary" />{"سجل المصروفات"}
           </h2>
           
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)", color: "#9ca3af" }}>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_67")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_68")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_69")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_70")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "center" }}>{t("trans_71")}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"التاريخ"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"الوصف"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"النوع/القسم"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"المبلغ"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "center" }}>{"إجراءات"}</th>
                 </tr>
               </thead>
               <tbody>
                 {expenses.length === 0 &&
                 <tr>
-                    <td colSpan={5} style={{ padding: "2rem", textAlign: "center", color: "#9ca3af" }}>{t("trans_72")}</td>
+                    <td colSpan={5} style={{ padding: "2rem", textAlign: "center", color: "#9ca3af" }}>{"لا يوجد مصروفات مسجلة حتى الآن."}</td>
                   </tr>
                 }
                 {expenses.map((expense) =>
@@ -114,18 +114,18 @@ export default async function ExpensesPage() {
                     </td>
                     <td style={{ padding: "1rem 0.5rem", textAlign: "right" }}>
                       {expense.type === "GENERAL" ?
-                    <span style={{ padding: "0.2rem 0.5rem", background: "var(--primary)", color: "#000", borderRadius: "var(--radius-sm)", fontSize: "0.8rem" }}>{t("trans_73")}</span> :
+                    <span style={{ padding: "0.2rem 0.5rem", background: "var(--primary)", color: "#000", borderRadius: "var(--radius-sm)", fontSize: "0.8rem" }}>{"مصروف عام"}</span> :
 
-                    <span style={{ padding: "0.2rem 0.5rem", background: "var(--secondary)", borderRadius: "var(--radius-sm)", fontSize: "0.8rem" }}>{t("trans_74")}{expense.partner?.name || t("trans_52")}</span>
+                    <span style={{ padding: "0.2rem 0.5rem", background: "var(--secondary)", borderRadius: "var(--radius-sm)", fontSize: "0.8rem" }}>{"شريك:"}{expense.partner?.name || "غير محدد"}</span>
                     }
                     </td>
                     <td style={{ padding: "1rem 0.5rem", fontWeight: "bold", textAlign: "right" }}>
-                      {expense.amount.toFixed(2)}{t("trans_4")}
+                      {expense.amount.toFixed(2)}{"ج.م"}
                   </td>
                     <td style={{ padding: "1rem 0.5rem", textAlign: "center" }}>
                       <form action={deleteExpense.bind(null, expense.id)} style={{ display: "inline" }}>
                         <button type="submit" className="btn btn-secondary" style={{ padding: "0.4rem 0.8rem", color: "var(--danger)" }} onClick={(e) => {
-                        if (!confirm(t("trans_75"))) e.preventDefault();
+                        if (!confirm("هل أنت متأكد من مسح هذا المصروف نهائياً؟")) e.preventDefault();
                       }}>
                           <Trash2 size={16} />
                         </button>

@@ -140,7 +140,7 @@ export default function BarcodesClient({ variants }: {variants: Variant[];}) {
                 type="checkbox"
                 checked={useStockQuantity}
                 onChange={(e) => setUseStockQuantity(e.target.checked)}
-                style={{ width: "18px", height: "18px", cursor: "pointer" }} />{t("trans_120")}
+                style={{ width: "18px", height: "18px", cursor: "pointer" }} />{"طباعة نفس الكمية الموجودة في المخزن"}
 
 
             </label>
@@ -191,7 +191,7 @@ export default function BarcodesClient({ variants }: {variants: Variant[];}) {
                 <div style={{ display: "flex", justifyContent: "center", transform: "scale(1.1)", transformOrigin: "top center", marginBottom: "4px" }}>
                   <Barcode renderer="svg" value={v.barcode} format="CODE128" width={2} height={50} displayValue={false} background="transparent" lineColor="black" margin={0} />
                 </div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", textAlign: "center", color: "black", marginTop: "4px" }}>{t("trans_30")}{v.product.code}{t("trans_121")}{v.product.price} EGP</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", textAlign: "center", color: "black", marginTop: "4px" }}>{"كود:"}{v.product.code}{"|  السعر:"}{v.product.price} EGP</div>
               </div>
             );
           })}

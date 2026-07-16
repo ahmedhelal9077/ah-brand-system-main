@@ -18,7 +18,7 @@ export default function QuickAddModalBtn({ categories }: {categories: any[];}) {
         className="btn btn-primary"
         style={{ padding: "0.6rem 1rem", fontSize: "1rem", display: "flex", alignItems: "center", gap: "0.5rem", background: "var(--accent)" }}>
         
-        <Zap size={18} />{t("trans_172")}
+        <Zap size={18} />{"إضافة سريعة (من التليفون)"}
       </button>
       
       {isOpen &&
@@ -33,13 +33,13 @@ export default function QuickAddModalBtn({ categories }: {categories: any[];}) {
       }}>
           <div style={{ padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)" }}>
             <h2 style={{ margin: 0, fontSize: "1.2rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <Zap size={20} />{t("trans_173")}
+              <Zap size={20} />{"إضافة سريعة"}
           </h2>
             <button
             onClick={() => setIsOpen(false)}
             className="btn btn-secondary"
             style={{ padding: "0.5rem", borderRadius: "50%" }}
-            title={t("trans_174")}>
+            title={"إغلاق"}>
             
               <X size={20} />
             </button>

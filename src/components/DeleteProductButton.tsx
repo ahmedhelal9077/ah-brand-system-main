@@ -10,7 +10,7 @@ export default function DeleteProductButton({ productId }: {productId: string;})
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!window.confirm(t("trans_246"))) return;
+    if (!window.confirm("تأكيد: هل أنت متأكد من مسح هذه الشنطة نهائياً من السيستم؟ (سيتم مسح الألوان الخاصة بها أيضاً)")) return;
 
     setIsDeleting(true);
     try {
@@ -19,7 +19,7 @@ export default function DeleteProductButton({ productId }: {productId: string;})
         alert(result.error);
       }
     } catch (err: any) {
-      alert(t("trans_247") + err.message);
+      alert("حدث خطأ أثناء المسح:" + err.message);
     } finally {
       setIsDeleting(false);
     }
@@ -31,7 +31,7 @@ export default function DeleteProductButton({ productId }: {productId: string;})
       disabled={isDeleting}
       className="btn btn-secondary"
       style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", color: "var(--danger)", borderColor: "var(--danger)" }}
-      title={t("trans_248")}>
+      title={"مسح نهائي"}>
       
       <Trash2 size={14} />
     </button>);

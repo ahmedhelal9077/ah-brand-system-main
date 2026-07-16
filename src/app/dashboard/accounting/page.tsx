@@ -102,7 +102,7 @@ export default async function AccountingPage() {
     <div className="animate-fade-in">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
         <h1 style={{ fontSize: "2rem", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <Calculator size={28} className="text-primary" />{t("trans_2")}
+          <Calculator size={28} className="text-primary" />{"الحسابات والأرباح"}
         </h1>
       </div>
 
@@ -110,28 +110,28 @@ export default async function AccountingPage() {
       <div className="grid-cards" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
         <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#9ca3af" }}>
-            <TrendingUp size={18} /> <span>{t("trans_3")}</span>
+            <TrendingUp size={18} /> <span>{"إجمالي المبيعات (إيرادات)"}</span>
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-            {Array.from(partnerMetrics.values()).reduce((sum, m) => sum + m.revenue, 0).toFixed(2)}{t("trans_4")}
+            {Array.from(partnerMetrics.values()).reduce((sum, m) => sum + m.revenue, 0).toFixed(2)}{"ج.م"}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#9ca3af" }}>
-            <TrendingDown size={18} style={{ color: "var(--danger)" }} /> <span>{t("trans_5")}</span>
+            <TrendingDown size={18} style={{ color: "var(--danger)" }} /> <span>{"إجمالي المصروفات العامة والخصومات"}</span>
           </div>
           <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "var(--danger)" }}>
-            {totalGeneralLosses.toFixed(2)}{t("trans_4")}
+            {totalGeneralLosses.toFixed(2)}{"ج.م"}
           </div>
         </div>
 
         <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem", border: "1px solid var(--primary)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--primary)" }}>
-            <DollarSign size={18} /> <span>{t("trans_6")}</span>
+            <DollarSign size={18} /> <span>{"صافي أرباح النظام الكلي"}</span>
           </div>
           <div style={{ fontSize: "1.8rem", fontWeight: "bold", color: totalNetSystemProfit >= 0 ? "var(--foreground)" : "var(--danger)" }}>
-            {totalNetSystemProfit.toFixed(2)}{t("trans_4")}
+            {totalNetSystemProfit.toFixed(2)}{"ج.م"}
           </div>
         </div>
       </div>
@@ -141,9 +141,9 @@ export default async function AccountingPage() {
         {/* Setup Shares */}
         <div className="glass-panel" style={{ padding: "1.5rem", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <PieChart size={20} className="text-primary" />{t("trans_7")}
+            <PieChart size={20} className="text-primary" />{"توزيع المصروفات العامة"}
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "#9ca3af", marginBottom: "1rem" }}>{t("trans_8")}
+          <p style={{ fontSize: "0.9rem", color: "#9ca3af", marginBottom: "1rem" }}>{"حدد النسبة المئوية التي يتحملها كل قسم (شريك) من المصروفات العامة (إيجار، كهرباء، خصومات للعملاء...). المجموع يجب أن يكون 100%."}
 
           </p>
           
@@ -154,7 +154,7 @@ export default async function AccountingPage() {
           </div>
           
           <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "space-between", fontWeight: "bold" }}>
-            <span>{t("trans_9")}</span>
+            <span>{"المجموع:"}</span>
             <span style={{ color: partners.reduce((sum, p) => sum + (p.expenseShare || 0), 0) === 100 ? "var(--primary)" : "var(--danger)" }}>
               {partners.reduce((sum, p) => sum + (p.expenseShare || 0), 0)}%
             </span>
@@ -164,20 +164,20 @@ export default async function AccountingPage() {
         {/* Partners Profit List */}
         <div className="glass-panel" style={{ padding: "1.5rem" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <DollarSign size={20} className="text-primary" />{t("trans_10")}
+            <DollarSign size={20} className="text-primary" />{"تفاصيل أرباح الأقسام (الشركاء)"}
           </h2>
           
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)", color: "#9ca3af" }}>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_11")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_12")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_13")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_14")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_15")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_16")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{t("trans_17")}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"القسم"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"إجمالي المبيعات"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"تكلفة البضاعة"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"مجمل الربح"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"نصيبه من الم.العامة"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"مصروفاته الخاصة"}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "right" }}>{"صافي الربح"}</th>
                 </tr>
               </thead>
               <tbody>

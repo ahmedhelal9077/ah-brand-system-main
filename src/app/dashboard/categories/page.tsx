@@ -40,16 +40,16 @@ export default async function CategoriesPage() {
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="partnerId">{t("trans_49")}</label>
+              <label className="input-label" htmlFor="partnerId">{"الشريك التابع له"}</label>
               <select className="input-field" id="partnerId" name="partnerId" required>
-                <option value="">{t("trans_50")}</option>
+                <option value="">{"-- اختر الشريك --"}</option>
                 {partners.map((p) =>
                 <option key={p.id} value={p.id}>{p.name}</option>
                 )}
               </select>
             </div>
             
-            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || t("trans_51")}>
+            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || "جاري التحميل..."}>
               {t("addCategory")}
             </SubmitButton>
           </form>
@@ -66,7 +66,7 @@ export default async function CategoriesPage() {
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)", color: "#9ca3af" }}>
                   <th style={{ padding: "1rem 0.5rem", textAlign: "start" }}>{t("name")}</th>
-                  <th style={{ padding: "1rem 0.5rem", textAlign: "start" }}>{t("trans_49")}</th>
+                  <th style={{ padding: "1rem 0.5rem", textAlign: "start" }}>{"الشريك التابع له"}</th>
                   <th style={{ padding: "1rem 0.5rem", textAlign: "start" }}>{t("totalProducts")}</th>
                   <th style={{ padding: "1rem 0.5rem", textAlign: "end" }}>{t("actions")}</th>
                 </tr>
@@ -82,7 +82,7 @@ export default async function CategoriesPage() {
                     <td style={{ padding: "1rem 0.5rem", fontWeight: "bold" }}>{cat.name}</td>
                     <td style={{ padding: "1rem 0.5rem" }}>
                       <span style={{ background: "var(--primary-light, rgba(0,0,0,0.1))", padding: "0.2rem 0.6rem", borderRadius: "var(--radius-sm)", fontSize: "0.8rem", border: "1px solid var(--primary)" }}>
-                        {cat.partner?.name || t("trans_52")}
+                        {cat.partner?.name || "غير محدد"}
                       </span>
                     </td>
                     <td style={{ padding: "1rem 0.5rem" }}>

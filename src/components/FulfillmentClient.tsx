@@ -30,7 +30,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
   const isTantaOrder = (order: any) => {
     const city = order.customerCity || "";
     const address = order.customerAddress || "";
-    return city === t("trans_175") || city.includes(t("trans_175")) || city === t("trans_176") && (address.includes(t("trans_175")) || address.toLowerCase().includes("tanta"));
+    return city === "طنطا" || city.includes("طنطا") || city === "الغربية" && (address.includes("طنطا") || address.toLowerCase().includes("tanta"));
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -55,7 +55,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
       setOrders(orders.filter((o) => o.id !== saleId));
       setSplitPromptOrderId(null);
     } catch (err: any) {
-      alert(err.message || t("trans_249"));
+      alert(err.message || "حدث خطأ أثناء تحديث حالة الطلب");
     } finally {
       setLoading(null);
     }
@@ -84,7 +84,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
 
   const handleSubmitIssue = async () => {
     if (!issueOrderId || !issueReason.trim()) {
-      return alert(t("trans_250"));
+      return alert("برجاء كتابة سبب عدم التقفيل");
     }
 
     setReportingIssue(true);
@@ -95,7 +95,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
       setIssueOrderId(null);
       setIssueReason("");
     } catch (err: any) {
-      alert(err.message || t("trans_251"));
+      alert(err.message || "حدث خطأ أثناء الإبلاغ عن المشكلة");
     } finally {
       setReportingIssue(false);
     }
@@ -103,8 +103,8 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
 
   const handleResolveEdit = async () => {
     if (!issueOrderId) return;
-    if (editNewCod === "" || editNewCod < 0) return alert(t("trans_252"));
-    if (!editNote.trim()) return alert(t("trans_253"));
+    if (editNewCod === "" || editNewCod < 0) return alert("برجاء إدخال مبلغ التحصيل الجديد بشكل صحيح");
+    if (!editNote.trim()) return alert("برجاء كتابة ملاحظة توضح سبب التعديل");
 
     setReportingIssue(true);
     try {
@@ -119,7 +119,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
       setIssueModalOpen(false);
       setIssueOrderId(null);
     } catch (err: any) {
-      alert(err.message || t("trans_254"));
+      alert(err.message || "حدث خطأ أثناء التعديل");
     } finally {
       setReportingIssue(false);
     }
@@ -128,13 +128,13 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
 
 
   const handleSendReport = async () => {
-    if (!window.confirm(t("trans_255"))) return;
+    if (!window.confirm("هل أنت متأكد من إرسال تقرير تقفيل اليوم للمدير على تليجرام؟")) return;
     setReportingIssue(true);
     try {
       await sendDailyFulfillmentReport();
-      alert(t("trans_256"));
+      alert("تم إرسال التقرير بنجاح على تليجرام!");
     } catch (err: any) {
-      alert(err.message || t("trans_257"));
+      alert(err.message || "حدث خطأ أثناء إرسال التقرير. تأكد من تفعيل تليجرام في الإعدادات.");
     } finally {
       setReportingIssue(false);
     }
@@ -150,8 +150,8 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 99999
       }}>
           <Loader2 size={64} className="text-primary" style={{ marginBottom: "1rem", animation: "spin 2s linear infinite" }} />
-          <h2 style={{ color: "white", fontSize: "1.8rem", marginBottom: "0.5rem" }}>{t("trans_258")}</h2>
-          <p style={{ color: "#9ca3af", fontSize: "1.1rem" }}>{t("trans_259")}</p>
+          <h2 style={{ color: "white", fontSize: "1.8rem", marginBottom: "0.5rem" }}>{"جاري معالجة الطلب..."}</h2>
+          <p style={{ color: "#9ca3af", fontSize: "1.1rem" }}>{"برجاء الانتظار، لا تقم بإغلاق الصفحة"}</p>
           <style>{`
             @keyframes spin {
               0% { transform: rotate(0deg); }
@@ -165,7 +165,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
           <div style={{ fontSize: "1.2rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <Package size={24} className="text-primary" />
-            <span>{t("trans_260")}</span>
+            <span>{"العدد المتبقي للتجهيز:"}</span>
             <span style={{ background: "var(--primary)", color: "var(--background)", padding: "0.2rem 0.8rem", borderRadius: "var(--radius-full)", fontSize: "1.1rem" }}>
               {orders.length}
             </span>
@@ -177,21 +177,21 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               className="btn btn-primary"
               style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "#0ea5e9", color: "white" }}>
               
-              <Send size={18} /> {reportingIssue ? t("trans_191") : t("trans_261")}
+              <Send size={18} /> {reportingIssue ? "جاري الإرسال..." : "إرسال تقرير اليوم"}
             </button>
             <button
               onClick={() => window.location.reload()}
               className="btn btn-secondary"
               style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               
-              <RefreshCw size={18} />{t("trans_138")}
+              <RefreshCw size={18} />{"تحديث الشاشة"}
             </button>
           </div>
         </div>
         
         <input
           type="text"
-          placeholder={t("trans_262")}
+          placeholder={"ابحث بالكود، أو الاسم، أو الملحوظات..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input-field"
@@ -201,13 +201,13 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
         <div style={{ display: "flex", gap: "1rem", marginTop: "0.5rem" }}>
           <button
             onClick={() => startTransition(() => setActiveTab("SHIPPING"))}
-            style={{ flex: 1, padding: "0.8rem", borderRadius: "var(--radius-md)", border: "none", fontWeight: "bold", cursor: "pointer", transition: "all 0.2s", background: activeTab === "SHIPPING" ? "var(--primary)" : "rgba(255,255,255,0.05)", color: activeTab === "SHIPPING" ? "var(--background)" : "var(--foreground)", opacity: isPending ? 0.7 : 1 }}>{t("trans_263")}
+            style={{ flex: 1, padding: "0.8rem", borderRadius: "var(--radius-md)", border: "none", fontWeight: "bold", cursor: "pointer", transition: "all 0.2s", background: activeTab === "SHIPPING" ? "var(--primary)" : "rgba(255,255,255,0.05)", color: activeTab === "SHIPPING" ? "var(--background)" : "var(--foreground)", opacity: isPending ? 0.7 : 1 }}>{"🚚 تجهيز شحن محافظات ("}
 
             {shippingCount})
           </button>
           <button
             onClick={() => startTransition(() => setActiveTab("TANTA"))}
-            style={{ flex: 1, padding: "0.8rem", borderRadius: "var(--radius-md)", border: "none", fontWeight: "bold", cursor: "pointer", transition: "all 0.2s", background: activeTab === "TANTA" ? "#10b981" : "rgba(255,255,255,0.05)", color: activeTab === "TANTA" ? "white" : "var(--foreground)", opacity: isPending ? 0.7 : 1 }}>{t("trans_264")}
+            style={{ flex: 1, padding: "0.8rem", borderRadius: "var(--radius-md)", border: "none", fontWeight: "bold", cursor: "pointer", transition: "all 0.2s", background: activeTab === "TANTA" ? "#10b981" : "rgba(255,255,255,0.05)", color: activeTab === "TANTA" ? "white" : "var(--foreground)", opacity: isPending ? 0.7 : 1 }}>{"🏠 تجهيز طنطا داخلي ("}
 
             {tantaCount})
           </button>
@@ -217,22 +217,22 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
       {orders.length === 0 ?
       <div style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(255,255,255,0.02)", borderRadius: "var(--radius-lg)", border: "1px dashed rgba(255,255,255,0.1)" }}>
           <CheckCircle size={48} style={{ color: "var(--accent)", margin: "0 auto 1rem", opacity: 0.8 }} />
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{t("trans_265")}</h2>
-          <p style={{ color: "#9ca3af" }}>{t("trans_266")}</p>
+          <h2 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{"لا يوجد أوردرات معلقة"}</h2>
+          <p style={{ color: "#9ca3af" }}>{"تم تجهيز جميع الأوردرات الأونلاين بنجاح. عاش يا بطل! 💪"}</p>
         </div> :
 
       <div className="grid-cards" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1.5rem" }}>
       {filteredOrders.length === 0 ?
-        <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", color: "#9ca3af" }}>{t("trans_267")}</div> :
+        <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", color: "#9ca3af" }}>{"لا يوجد أوردرات تطابق البحث."}</div> :
 
         filteredOrders.map((order) =>
           <div key={order.id} className="glass-panel" style={{ padding: "1.5rem", position: "relative", borderTop: "4px solid var(--warning)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
               <div>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-                  <Package size={20} className="text-warning" />{t("trans_141")}{order.invoiceCode}
+                  <Package size={20} className="text-warning" />{"فاتورة #"}{order.invoiceCode}
                   {order.isExchange &&
-                  <span style={{ fontSize: "0.8rem", background: "var(--warning)", color: "black", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: "bold" }}>{t("trans_268")}</span>
+                  <span style={{ fontSize: "0.8rem", background: "var(--warning)", color: "black", padding: "0.2rem 0.5rem", borderRadius: "4px", fontWeight: "bold" }}>{"استبدال 🔄"}</span>
                   }
                 </h3>
                 <p style={{ color: "#9ca3af", fontSize: "0.85rem", marginTop: "0.2rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
@@ -242,7 +242,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
             </div>
           
             <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: "var(--radius-md)", padding: "1rem", marginBottom: "1.5rem" }}>
-              <h4 style={{ fontSize: "0.9rem", color: "#9ca3af", marginBottom: "0.8rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.5rem" }}>{t("trans_143")}</h4>
+              <h4 style={{ fontSize: "0.9rem", color: "#9ca3af", marginBottom: "0.8rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.5rem" }}>{"المنتجات المطلوبة:"}</h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
               {(() => {
                 const packedAtDate = order.packedAt ? new Date(order.packedAt).getTime() : null;
@@ -261,9 +261,9 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                     <div style={{ flex: 1 }}>
                       <p style={{ fontWeight: "bold", fontSize: "1.1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         {item.productVariant.product.name}
-                        {isNew && <span style={{ fontSize: "0.75rem", background: "var(--warning)", color: "black", padding: "0.2rem 0.5rem", borderRadius: "var(--radius-full)" }}>{t("trans_269")}</span>}
+                        {isNew && <span style={{ fontSize: "0.75rem", background: "var(--warning)", color: "black", padding: "0.2rem 0.5rem", borderRadius: "var(--radius-full)" }}>{"إضافة جديدة للتجهيز 🚨"}</span>}
                       </p>
-                      <p style={{ color: "var(--primary)", fontSize: "0.9rem", marginTop: "0.2rem" }}>{t("trans_144")}{item.productVariant.colorName}{t("trans_145")}{item.productVariant.product.code}</p>
+                      <p style={{ color: "var(--primary)", fontSize: "0.9rem", marginTop: "0.2rem" }}>{"لون:"}{item.productVariant.colorName}{"| كود: #"}{item.productVariant.product.code}</p>
                     </div>
                     <div style={{ background: "rgba(255,255,255,0.1)", padding: "0.5rem 1rem", borderRadius: "var(--radius-full)", fontWeight: "bold", fontSize: "1.3rem" }}>
                       {item.quantity}x
@@ -275,13 +275,13 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                   return (
                     <>
                       <div style={{ marginBottom: "1rem" }}>
-                        <h5 style={{ color: "var(--warning)", marginBottom: "0.5rem", fontSize: "0.9rem" }}>{t("trans_270")}</h5>
+                        <h5 style={{ color: "var(--warning)", marginBottom: "0.5rem", fontSize: "0.9rem" }}>{"⚠️ منتجات مضافة حديثاً (يجب إضافتها للكرتونة):"}</h5>
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                           {newItems.map((item: any) => renderItem(item, true))}
                         </div>
                       </div>
                       <div>
-                        <h5 style={{ color: "#9ca3af", marginBottom: "0.5rem", fontSize: "0.9rem" }}>{t("trans_271")}</h5>
+                        <h5 style={{ color: "#9ca3af", marginBottom: "0.5rem", fontSize: "0.9rem" }}>{"📦 منتجات الفاتورة الأصلية (موجودة بالفعل):"}</h5>
                         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                           {oldItems.map((item: any) => renderItem(item, false))}
                         </div>
@@ -296,12 +296,12 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
           </div>
 
           <div style={{ background: "rgba(14, 165, 233, 0.05)", border: "1px solid rgba(14, 165, 233, 0.2)", borderRadius: "var(--radius-md)", padding: "1rem", marginBottom: "1.5rem" }}>
-            <h4 style={{ fontSize: "0.95rem", color: "#0ea5e9", marginBottom: "0.5rem", fontWeight: "bold" }}>{t("trans_272")}</h4>
+            <h4 style={{ fontSize: "0.95rem", color: "#0ea5e9", marginBottom: "0.5rem", fontWeight: "bold" }}>{"بيانات التوصيل (COD):"}</h4>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", fontSize: "0.9rem" }}>
-              <div><span style={{ color: "#9ca3af" }}>{t("trans_205")}</span> {order.customerName || t("trans_52")}</div>
-              <div><span style={{ color: "#9ca3af" }}>{t("trans_273")}</span> {order.customerPhone || t("trans_52")}</div>
-              <div><span style={{ color: "#9ca3af" }}>{t("trans_274")}</span> {order.customerCity || t("trans_52")}</div>
-              <div><span style={{ color: "#9ca3af" }}>{t("trans_275")}</span> {order.customerAddress || t("trans_52")}</div>
+              <div><span style={{ color: "#9ca3af" }}>{"العميل:"}</span> {order.customerName || "غير محدد"}</div>
+              <div><span style={{ color: "#9ca3af" }}>{"التليفون:"}</span> {order.customerPhone || "غير محدد"}</div>
+              <div><span style={{ color: "#9ca3af" }}>{"المحافظة:"}</span> {order.customerCity || "غير محدد"}</div>
+              <div><span style={{ color: "#9ca3af" }}>{"العنوان:"}</span> {order.customerAddress || "غير محدد"}</div>
             </div>
             
             {order.customerPhone &&
@@ -310,7 +310,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                 href={`tel:${order.customerPhone}`}
                 className="btn btn-secondary"
                 style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", padding: "0.5rem" }}
-                title={t("trans_276")}>{t("trans_277")}
+                title={"اتصال هاتفي"}>{"📞 اتصال"}
 
 
               </a>
@@ -319,16 +319,16 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                 target="_blank" rel="noopener noreferrer"
                 className="btn"
                 style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", padding: "0.5rem", background: "#25D366", color: "white", textDecoration: "none", borderRadius: "var(--radius-md)", fontWeight: "bold" }}
-                title={t("trans_278")}>{t("trans_279")}
+                title={"مراسلة واتساب"}>{"💬 واتساب"}
 
 
               </a>
               </div>
             }
             <div style={{ marginTop: "0.8rem", paddingTop: "0.8rem", borderTop: "1px dashed rgba(14, 165, 233, 0.2)", fontSize: "1.1rem", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>{t("trans_280")}</span>
+              <span>{"المبلغ المطلوب تحصيله (COD):"}</span>
               <span style={{ color: "var(--warning)", fontSize: "1.3rem" }}>
-                {order.remainingAmount !== null ? order.remainingAmount : order.totalAmount}{t("trans_4")}
+                {order.remainingAmount !== null ? order.remainingAmount : order.totalAmount}{"ج.م"}
               </span>
             </div>
           </div>
@@ -340,7 +340,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               onClick={() => attemptPack(order)}
               disabled={loading === order.id || reportingIssue}>
               
-              {loading === order.id ? t("trans_218") : <><CheckCircle size={20} />{t("trans_281")}</>}
+              {loading === order.id ? "جاري التحديث..." : <><CheckCircle size={20} />{"الأوردر جاهز للشحن"}</>}
             </button>
 
             <button
@@ -348,9 +348,9 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               style={{ padding: "0.8rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
               onClick={() => handleOpenIssueModal(order.id)}
               disabled={loading === order.id || reportingIssue}
-              title={t("trans_282")}>
+              title={"يوجد مشكلة / لم يتم التقفيل"}>
               
-              <AlertTriangle size={20} />{t("trans_283")}
+              <AlertTriangle size={20} />{"متقفلش!"}
             </button>
           </div>
         </div>
@@ -365,7 +365,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
           <div className="modal-content" style={{ maxWidth: "600px", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--danger)" }}>
-                <AlertTriangle size={24} />{t("trans_284")}
+                <AlertTriangle size={24} />{"متقفلش / يوجد مشكلة"}
             </h2>
               <button onClick={() => setIssueModalOpen(false)} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer" }}>
                 <X size={24} />
@@ -376,14 +376,14 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               <button
               onClick={() => setIssueMode("REPORT")}
               className={`btn ${issueMode === "REPORT" ? "btn-danger" : "btn-secondary"}`}
-              style={{ flex: 1, opacity: issueMode === "REPORT" ? 1 : 0.6 }}>{t("trans_285")}
+              style={{ flex: 1, opacity: issueMode === "REPORT" ? 1 : 0.6 }}>{"ارسال للمدير لحل المشكلة"}
 
 
             </button>
               <button
               onClick={() => setIssueMode("EDIT")}
               className={`btn ${issueMode === "EDIT" ? "btn-primary" : "btn-secondary"}`}
-              style={{ flex: 1, opacity: issueMode === "EDIT" ? 1 : 0.6 }}>{t("trans_286")}
+              style={{ flex: 1, opacity: issueMode === "EDIT" ? 1 : 0.6 }}>{"تعديل الأوردر (تم الحل مع العميل)"}
 
 
             </button>
@@ -391,20 +391,20 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
 
             {issueMode === "REPORT" &&
           <>
-                <p style={{ marginBottom: "1rem", color: "#e5e7eb" }}>{t("trans_287")}
+                <p style={{ marginBottom: "1rem", color: "#e5e7eb" }}>{"لماذا لم يتم تقفيل هذا الأوردر؟ (سيتم إرسال هذا السبب للمدير للتعامل مع الأوردر)"}
 
             </p>
                 <textarea
               value={issueReason}
               onChange={(e) => setIssueReason(e.target.value)}
-              placeholder={t("trans_288")}
+              placeholder={"مثال: الشنطة الكروس السوداء فيها ديفوه وخلصت من المخزن..."}
               className="input-field"
               style={{ width: "100%", height: "120px", resize: "vertical", marginBottom: "1.5rem" }} />
             
                 <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                  <button className="btn btn-secondary" onClick={() => setIssueModalOpen(false)} disabled={reportingIssue}>{t("trans_100")}</button>
+                  <button className="btn btn-secondary" onClick={() => setIssueModalOpen(false)} disabled={reportingIssue}>{"إلغاء"}</button>
                   <button className="btn btn-danger" onClick={handleSubmitIssue} disabled={reportingIssue}>
-                    {reportingIssue ? t("trans_191") : t("trans_289")}
+                    {reportingIssue ? "جاري الإرسال..." : "إرسال المشكلة للمدير"}
                   </button>
                 </div>
               </>
@@ -413,7 +413,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
             {issueMode === "EDIT" &&
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ background: "rgba(255,255,255,0.05)", padding: "1rem", borderRadius: "8px" }}>
-                  <h4 style={{ marginBottom: "0.5rem" }}>{t("trans_290")}</h4>
+                  <h4 style={{ marginBottom: "0.5rem" }}>{"المنتجات الحالية:"}</h4>
                   {orders.find((o) => o.id === issueOrderId)?.items.map((item: any) =>
               <div key={item.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5rem", borderBottom: "1px solid rgba(255,255,255,0.1)", opacity: editDeletedItemIds.includes(item.id) ? 0.3 : 1 }}>
                       <div>
@@ -424,14 +424,14 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                     if (editDeletedItemIds.includes(item.id)) {
                       setEditDeletedItemIds(editDeletedItemIds.filter((id) => id !== item.id));
                     } else {
-                      if (window.confirm(t("trans_291"))) {
+                      if (window.confirm("تأكيد: هل تريد مسح هذا المنتج ورده للمخزن؟")) {
                         setEditDeletedItemIds([...editDeletedItemIds, item.id]);
                       }
                     }
                   }}
                   style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer", fontWeight: "bold" }}>
                   
-                        {editDeletedItemIds.includes(item.id) ? t("trans_292") : <><Trash2 size={18} />{t("trans_293")}</>}
+                        {editDeletedItemIds.includes(item.id) ? "تراجع عن الحذف" : <><Trash2 size={18} />{"مسح من الأوردر"}</>}
                       </button>
                     </div>
               )}
@@ -440,7 +440,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <input
                 type="text"
-                placeholder={t("trans_294")}
+                placeholder={"باركود المنتج الجديد (إسكان هنا)"}
                 className="input-field"
                 value={editBarcodeText}
                 onChange={(e) => setEditBarcodeText(e.target.value)}
@@ -464,19 +464,19 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                   }
                 }}>
                 
-                    <Plus size={20} />{t("trans_295")}
+                    <Plus size={20} />{"إضافة للأوردر"}
               </button>
                   <button
                 className="btn btn-secondary"
                 onClick={() => setShowScanner(true)}
-                title={t("trans_296")}>
+                title={"استخدام كاميرا الهاتف كإسكانر"}>
                 
                     <Camera size={20} />
                   </button>
                 </div>
                 {editNewBarcodes.length > 0 &&
             <div style={{ padding: "0.5rem", background: "rgba(16, 185, 129, 0.1)", borderRadius: "8px" }}>
-                    <strong>{t("trans_297")}</strong>
+                    <strong>{"باركودات تمت إضافتها:"}</strong>
                     <ul style={{ paddingRight: "1.5rem" }}>
                       {editNewBarcodes.map((b, i) =>
                 <li key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -491,28 +491,28 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
                 <textarea
               value={editNote}
               onChange={(e) => setEditNote(e.target.value)}
-              placeholder={t("trans_298")}
+              placeholder={"ملاحظة التعديل (ضروري جداً - مثال: العميل وافق على استبدال الموديل...)"}
               className="input-field"
               style={{ width: "100%", height: "80px", resize: "vertical" }} />
             
 
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap", background: "rgba(245, 158, 11, 0.1)", padding: "1rem", borderRadius: "8px" }}>
-                  <label style={{ whiteSpace: "nowrap", fontWeight: "bold" }}>{t("trans_299")}</label>
+                  <label style={{ whiteSpace: "nowrap", fontWeight: "bold" }}>{"الرقم اللي الموظف هيكتبه هنا هيتزود عليه مصاريف الشحن أوتوماتيك:"}</label>
                   <input
                 type="number"
                 className="input-field"
                 value={editNewCod}
                 onChange={(e) => setEditNewCod(e.target.value === "" ? "" : Number(e.target.value))}
-                placeholder={t("trans_300")}
+                placeholder={"التحصيل قبل الشحن"}
                 style={{ width: "180px", border: "1px solid var(--warning)" }} />
               
-                  <span style={{ fontSize: "0.9rem", color: "var(--warning)" }}>{t("trans_301")}</span>
+                  <span style={{ fontSize: "0.9rem", color: "var(--warning)" }}>{"(سيتم إضافة 110 أو 130 ج.م على الرقم ده)"}</span>
                 </div>
 
                 <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "1rem" }}>
-                  <button className="btn btn-secondary" onClick={() => setIssueModalOpen(false)} disabled={reportingIssue}>{t("trans_100")}</button>
+                  <button className="btn btn-secondary" onClick={() => setIssueModalOpen(false)} disabled={reportingIssue}>{"إلغاء"}</button>
                   <button className="btn btn-primary" onClick={handleResolveEdit} disabled={reportingIssue}>
-                    {reportingIssue ? t("trans_218") : t("trans_302")}
+                    {reportingIssue ? "جاري التحديث..." : "تأكيد وتحديث الأوردر"}
                   </button>
                 </div>
               </div>
@@ -527,7 +527,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
         background: "black", zIndex: 9999, display: "flex", flexDirection: "column"
       }}>
           <div style={{ padding: "1rem", display: "flex", justifyContent: "space-between", background: "#111", color: "white" }}>
-            <h3>{t("trans_303")}</h3>
+            <h3>{"مسح الباركود بالكاميرا"}</h3>
             <button onClick={() => setShowScanner(false)} style={{ background: "none", border: "none", color: "white" }}><X size={24} /></button>
           </div>
           <div style={{ flex: 1, position: "relative" }}>
@@ -552,7 +552,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
           <div className="glass-panel animate-scale-in" style={{ width: "100%", maxWidth: "500px", padding: "2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
               <h3 style={{ fontSize: "1.3rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Package size={24} className="text-warning" />{t("trans_304")}
+                <Package size={24} className="text-warning" />{"كيف قمت بتغليف هذه الزيادة؟"}
 
             </h3>
               <button onClick={() => setSplitPromptOrderId(null)} style={{ background: "transparent", border: "none", color: "var(--muted)", cursor: "pointer" }}>
@@ -560,7 +560,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               </button>
             </div>
             
-            <p style={{ marginBottom: "1.5rem", color: "var(--muted)", lineHeight: 1.6 }}>{t("trans_305")}
+            <p style={{ marginBottom: "1.5rem", color: "var(--muted)", lineHeight: 1.6 }}>{"هذا الأوردر تم إضافة منتجات عليه بعد تجهيزه مسبقاً، هل قمت بفتح الكيس القديم وجمعهم معاً؟ أم قمت بوضع الزيادة في كيس جديد منفصل؟"}
 
           </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -568,7 +568,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               onClick={() => handlePack(splitPromptOrderId, orders.find((o) => o.id === splitPromptOrderId)?.items?.length || 0, false, orders.find((o) => o.id === splitPromptOrderId)?.updatedAt)}
               disabled={loading === splitPromptOrderId}
               className="btn btn-primary"
-              style={{ padding: "1rem", fontSize: "1.1rem" }}>{t("trans_306")}
+              style={{ padding: "1rem", fontSize: "1.1rem" }}>{"📦 جمعت القديم والجديد في كيس واحد"}
 
 
             </button>
@@ -577,7 +577,7 @@ export default function FulfillmentClient({ initialOrders }: {initialOrders: any
               onClick={() => handlePack(splitPromptOrderId, orders.find((o) => o.id === splitPromptOrderId)?.items?.length || 0, true, orders.find((o) => o.id === splitPromptOrderId)?.updatedAt)}
               disabled={loading === splitPromptOrderId}
               className="btn btn-secondary"
-              style={{ padding: "1rem", fontSize: "1.1rem", borderColor: "var(--warning)", color: "var(--warning)" }}>{t("trans_307")}
+              style={{ padding: "1rem", fontSize: "1.1rem", borderColor: "var(--warning)", color: "var(--warning)" }}>{"🛍️ التغليف منفصل (كل أوردر في كيس لوحده)"}
 
 
             </button>

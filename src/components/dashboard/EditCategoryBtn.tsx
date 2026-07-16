@@ -38,7 +38,7 @@ export default function EditCategoryBtn({ category, partners }: {category: Categ
         onClick={() => setIsOpen(true)}
         className="btn btn-secondary"
         style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", color: "var(--primary)" }}
-        title={t("trans_125")}>
+        title={"تعديل القسم"}>
         
         <Edit2 size={14} />
       </button>
@@ -47,7 +47,7 @@ export default function EditCategoryBtn({ category, partners }: {category: Categ
       <div className="modal-backdrop" onClick={(e) => {if (e.target === e.currentTarget) setIsOpen(false);}}>
           <div className="modal-content animate-scale" style={{ maxWidth: "400px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-              <h2 style={{ fontSize: "1.2rem", margin: 0, color: "var(--foreground)" }}>{t("trans_125")}</h2>
+              <h2 style={{ fontSize: "1.2rem", margin: 0, color: "var(--foreground)" }}>{"تعديل القسم"}</h2>
               <button onClick={() => setIsOpen(false)} style={{ background: "transparent", border: "none", color: "#9ca3af", cursor: "pointer" }}>
                 <X size={20} />
               </button>
@@ -57,14 +57,14 @@ export default function EditCategoryBtn({ category, partners }: {category: Categ
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="name">{t("trans_126")}</label>
+                <label className="input-label" htmlFor="name">{"اسم القسم"}</label>
                 <input className="input-field" type="text" id="name" name="name" defaultValue={category.name} required />
               </div>
 
               <div className="input-group" style={{ marginBottom: "0" }}>
-                <label className="input-label" htmlFor="partnerId">{t("trans_49")}</label>
+                <label className="input-label" htmlFor="partnerId">{"الشريك التابع له"}</label>
                 <select className="input-field" id="partnerId" name="partnerId" defaultValue={category.partnerId || ""} required>
-                  <option value="">{t("trans_50")}</option>
+                  <option value="">{"-- اختر الشريك --"}</option>
                   {partners.map((p) =>
                 <option key={p.id} value={p.id}>{p.name}</option>
                 )}
@@ -72,11 +72,11 @@ export default function EditCategoryBtn({ category, partners }: {category: Categ
               </div>
               
               <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-                <button type="button" className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setIsOpen(false)}>{t("trans_100")}
+                <button type="button" className="btn btn-secondary" style={{ flex: 1 }} onClick={() => setIsOpen(false)}>{"إلغاء"}
 
               </button>
                 <button type="submit" className="btn btn-primary" style={{ flex: 1 }} disabled={loading}>
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : t("trans_127")}
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : "حفظ التعديلات"}
                 </button>
               </div>
             </form>

@@ -358,7 +358,7 @@ export default function StoreClient({ categories, storeLinks = [], storeLocation
           style={{ color: "var(--foreground)", textDecoration: "underline", fontSize: "0.95rem" }}
           className="hover-opacity">
             
-                {loc.name}{i < storeLocations.length - 1 ? t("trans_401") : ""}
+                {loc.name}{i < storeLocations.length - 1 ? "،" : ""}
               </a>
           )}
           </div>

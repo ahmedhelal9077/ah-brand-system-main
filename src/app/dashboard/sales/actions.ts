@@ -5,7 +5,7 @@ import { getSession } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
-export async function processReturn(saleItemId: string, returnQty: number, reason: string) {
+export async function processReturn(saleItemId: string, reason: string) {
   const session = await getSession();
   if (!session || session.role !== "OWNER") {
     return { error: "Unauthorized. Only the owner can process returns." };
@@ -20,45 +20,25 @@ export async function processReturn(saleItemId: string, returnQty: number, reaso
       });
 
       if (!saleItem) throw new Error("Sale item not found");
-      if (saleItem.isReturned || saleItem.returnedQuantity >= saleItem.quantity) throw new Error("Item is already fully returned");
-      if (returnQty <= 0 || returnQty > (saleItem.quantity - saleItem.returnedQuantity)) throw new Error("Invalid return quantity");
+      if (saleItem.isReturned) throw new Error("Item is already returned");
 
       // 1. Mark as returned
-      const newReturnedQty = saleItem.returnedQuantity + returnQty;
-      const isFullyReturned = newReturnedQty === saleItem.quantity;
-      
       await tx.saleItem.update({
         where: { id: saleItemId },
-        data: { 
-          returnedQuantity: newReturnedQty,
-          isReturned: isFullyReturned, 
-          returnReason: reason 
-        }
+        data: { isReturned: true, returnReason: reason }
       });
 
       // 2. Increment stock
       await tx.productVariant.update({
         where: { id: saleItem.productVariantId },
-        data: { stock: { increment: returnQty } }
+        data: { stock: { increment: saleItem.quantity } }
       });
 
       // 3. Deduct from total amount of the sale
-      const amountToDeduct = returnQty * saleItem.priceAtSale;
-      
-      // Calculate new remaining amount if it exists
-      const sale = await tx.sale.findUnique({ where: { id: saleItem.saleId } });
-      let newRemaining = sale?.remainingAmount;
-      if (newRemaining !== null && newRemaining !== undefined) {
-         newRemaining = Math.max(0, newRemaining - amountToDeduct);
-      }
-
+      const amountToDeduct = saleItem.quantity * saleItem.priceAtSale;
       const updatedSale = await tx.sale.update({
         where: { id: saleItem.saleId },
-        data: { 
-          totalAmount: { decrement: amountToDeduct },
-          returnedAmount: { increment: amountToDeduct },
-          remainingAmount: newRemaining
-        },
+        data: { totalAmount: { decrement: amountToDeduct } },
         include: { items: true }
       });
 
@@ -76,7 +56,7 @@ export async function processReturn(saleItemId: string, returnQty: number, reaso
         data: {
           userId: session.id,
           action: "RETURN",
-          details: `Processed return for ${returnQty}x ${saleItem.productVariant.product.name} (Code: ${saleItem.productVariant.product.code}, Color: ${saleItem.productVariant.colorName}). Refunded ${amountToDeduct} EGP. Reason: ${reason}`
+          details: `Processed return for ${saleItem.quantity}x ${saleItem.productVariant.product.name} (Code: ${saleItem.productVariant.product.code}, Color: ${saleItem.productVariant.colorName}). Refunded ${amountToDeduct} EGP. Reason: ${reason}`
         }
       });
     });

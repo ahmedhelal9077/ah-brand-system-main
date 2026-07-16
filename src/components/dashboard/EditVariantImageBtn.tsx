@@ -65,7 +65,7 @@ export default function EditVariantImageBtn({ variantId, productId, currentImage
       }
     } catch (err) {
       console.error(err);
-      alert(t("trans_134"));
+      alert("فشل رفع الصورة");
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export default function EditVariantImageBtn({ variantId, productId, currentImage
       }
     } catch (err) {
       console.error(err);
-      alert(t("trans_134"));
+      alert("فشل رفع الصورة");
     } finally {
       setLoading(false);
     }

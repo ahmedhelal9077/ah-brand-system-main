@@ -65,14 +65,14 @@ export default async function WarehousePerformancePage({ searchParams }: {search
       <div style={{ marginBottom: "2rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "1rem" }}>
         <div>
           <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem", color: "var(--primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <Activity size={28} />{t("trans_103")}
+            <Activity size={28} />{"أداء المخزن (التجهيز)"}
 
           </h1>
-          <p style={{ color: "#9ca3af" }}>{t("trans_104")}</p>
+          <p style={{ color: "#9ca3af" }}>{"متابعة إنتاجية موظفي المخزن ومعدلات التقفيل."}</p>
         </div>
         
         <form action="/dashboard/warehouse-performance" method="GET" style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-          <label style={{ color: "#9ca3af", fontWeight: "bold" }}>{t("trans_105")}</label>
+          <label style={{ color: "#9ca3af", fontWeight: "bold" }}>{"التاريخ:"}</label>
           <input
             type="date"
             name="date"
@@ -80,13 +80,13 @@ export default async function WarehousePerformancePage({ searchParams }: {search
             className="input-field"
             style={{ width: "auto" }} />
           
-          <button type="submit" className="btn btn-primary">{t("trans_106")}</button>
+          <button type="submit" className="btn btn-primary">{"عرض"}</button>
         </form>
       </div>
 
       <div className="grid-cards" style={{ gridTemplateColumns: "1fr", gap: "1.5rem" }}>
         {performanceList.length === 0 ?
-        <div className="glass-panel" style={{ padding: "3rem", textAlign: "center", color: "#9ca3af" }}>{t("trans_107")}
+        <div className="glass-panel" style={{ padding: "3rem", textAlign: "center", color: "#9ca3af" }}>{"لا يوجد عمليات تقفيل مسجلة في هذا اليوم."}
 
         </div> :
 
@@ -94,22 +94,22 @@ export default async function WarehousePerformancePage({ searchParams }: {search
             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "right" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)", color: "#9ca3af" }}>
-                  <th style={{ padding: "1rem" }}>{t("trans_108")}</th>
-                  <th style={{ padding: "1rem", textAlign: "center" }}>{t("trans_109")}</th>
-                  <th style={{ padding: "1rem", textAlign: "center" }}>{t("trans_110")}</th>
-                  <th style={{ padding: "1rem", textAlign: "center" }}>{t("trans_111")}</th>
-                  <th style={{ padding: "1rem", textAlign: "center" }}>{t("trans_112")}</th>
+                  <th style={{ padding: "1rem" }}>{"الموظف"}</th>
+                  <th style={{ padding: "1rem", textAlign: "center" }}>{"إجمالي الفواتير المجهزة"}</th>
+                  <th style={{ padding: "1rem", textAlign: "center" }}>{"أول أوردر (بداية الشغل)"}</th>
+                  <th style={{ padding: "1rem", textAlign: "center" }}>{"آخر أوردر (آخر تحديث)"}</th>
+                  <th style={{ padding: "1rem", textAlign: "center" }}>{"متوسط الوقت بين الأوردرات"}</th>
                 </tr>
               </thead>
               <tbody>
                 {performanceList.map((stat, i) => {
-                let avgTimeStr = t("trans_113");
+                let avgTimeStr = "أوردر واحد فقط";
                 if (stat.count > 1 && stat.firstPack && stat.lastPack) {
                   const diffMs = stat.lastPack.getTime() - stat.firstPack.getTime();
                   const diffMins = Math.floor(diffMs / 1000 / 60);
                   const avgMins = Math.round(diffMins / (stat.count - 1));
 
-                  if (avgMins === 0) avgTimeStr = t("trans_114");else
+                  if (avgMins === 0) avgTimeStr = "أقل من دقيقة";else
                   avgTimeStr = `${avgMins} دقيقة / أوردر`;
                 }
 

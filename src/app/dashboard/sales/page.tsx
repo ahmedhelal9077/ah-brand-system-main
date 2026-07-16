@@ -95,28 +95,28 @@ export default async function SalesHistoryPage({ searchParams }: {searchParams: 
     <div className="animate-fade-in">
       <div style={{ marginBottom: "2rem" }}>
         <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem", color: "var(--primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <RefreshCcw size={28} />{t("trans_80")}
+          <RefreshCcw size={28} />{"سجل المبيعات والمرتجعات"}
 
         </h1>
-        <p style={{ color: "#9ca3af", marginBottom: "1.5rem" }}>{t("trans_81")}
+        <p style={{ color: "#9ca3af", marginBottom: "1.5rem" }}>{"عرض أحدث الفواتير، تقدر تبحث بالرقم، أو تفلتر بالتاريخ ونطاق الفواتير لإرسالها لبوسطة بالجملة."}
 
         </p>
 
         <form action="/dashboard/sales" method="GET" style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap", background: "rgba(255,255,255,0.02)", padding: "1rem", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
           
           <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", flexGrow: 1, minWidth: "200px" }}>
-            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Search size={14} />{t("trans_82")}</label>
+            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Search size={14} />{"بحث عام"}</label>
             <input
               type="text"
               name="q"
-              placeholder={t("trans_83")}
+              placeholder={"ابحث بكود الفاتورة..."}
               defaultValue={q}
               className="input-field" />
             
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", minWidth: "150px" }}>
-            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Calendar size={14} />{t("trans_67")}</label>
+            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Calendar size={14} />{"التاريخ"}</label>
             <input
               type="date"
               name="date"
@@ -126,11 +126,11 @@ export default async function SalesHistoryPage({ searchParams }: {searchParams: 
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", width: "100px" }}>
-            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Hash size={14} />{t("trans_84")}</label>
+            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Hash size={14} />{"من فاتورة"}</label>
             <input
               type="number"
               name="fromInvoice"
-              placeholder={t("trans_85")}
+              placeholder={"مثال: 1"}
               defaultValue={fromInvoice}
               className="input-field"
               min="1" />
@@ -138,11 +138,11 @@ export default async function SalesHistoryPage({ searchParams }: {searchParams: 
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", width: "100px" }}>
-            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Hash size={14} />{t("trans_86")}</label>
+            <label style={{ fontSize: "0.85rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: "0.3rem" }}><Hash size={14} />{"إلى فاتورة"}</label>
             <input
               type="number"
               name="toInvoice"
-              placeholder={t("trans_87")}
+              placeholder={"مثال: 50"}
               defaultValue={toInvoice}
               className="input-field"
               min="1" />
@@ -150,7 +150,7 @@ export default async function SalesHistoryPage({ searchParams }: {searchParams: 
           </div>
 
           <div style={{ display: "flex", alignItems: "flex-end" }}>
-            <button type="submit" className="btn btn-primary" style={{ height: "42px", padding: "0 2rem" }}>{t("trans_88")}</button>
+            <button type="submit" className="btn btn-primary" style={{ height: "42px", padding: "0 2rem" }}>{"فلترة"}</button>
           </div>
         </form>
       </div>

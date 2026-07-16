@@ -13,7 +13,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
   const [awb, setAwb] = useState<string | null>(currentAwb);
 
   const handleSend = async () => {
-    if (!confirm(t("trans_383"))) return;
+    if (!confirm("هل أنت متأكد من إرسال هذا الطلب لشركة بوسطة؟")) return;
 
     setLoading(true);
     setError(null);
@@ -26,7 +26,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
         setAwb(res.awbUrl || null);
       }
     } catch (e: any) {
-      setError(e.message || t("trans_384"));
+      setError(e.message || "حدث خطأ غير معروف");
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
   if (tracking?.startsWith("LOCAL-TANTA")) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem", color: "#10b981", fontWeight: "bold" }}>
-        <CheckCircle size={16} />{t("trans_385")}
+        <CheckCircle size={16} />{"توصيل داخلي (طنطا) 🚚"}
       </div>);
 
   }
@@ -58,10 +58,10 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
   if (tracking) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem", color: "var(--accent)" }}>
-        <CheckCircle size={16} />{t("trans_386")}{tracking})
+        <CheckCircle size={16} />{"تم الإرسال ("}{tracking})
         {awb &&
         <button onClick={handlePrint} className="btn btn-secondary" style={{ padding: "0.2rem 0.5rem", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "0.2rem" }}>
-            <ExternalLink size={14} />{t("trans_387")}
+            <ExternalLink size={14} />{"طباعة البوليصة"}
         </button>
         }
       </div>);
@@ -69,7 +69,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
   }
 
   if (!isPacked) {
-    return <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{t("trans_388")}</span>;
+    return <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{"في انتظار التجهيز"}</span>;
   }
 
   return (
@@ -80,7 +80,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
         className="btn"
         style={{ background: "#ea580c", color: "white", padding: "0.3rem 0.5rem", fontSize: "0.8rem", width: "fit-content" }}>
         
-        {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}{t("trans_389")}
+        {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}{"إرسال لبوسطة"}
 
       </button>
       {error && <span style={{ color: "var(--danger)", fontSize: "0.75rem" }}>{error}</span>}

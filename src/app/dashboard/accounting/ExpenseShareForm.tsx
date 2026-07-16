@@ -34,7 +34,7 @@ export default function ExpenseShareForm({ partner }: {partner: any;}) {
         <span>%</span>
       </div>
       <button type="submit" className="btn btn-secondary" disabled={loading || share === partner.expenseShare} style={{ padding: "0.4rem 1rem", fontSize: "0.85rem" }}>
-        {loading ? <Loader2 className="animate-spin" size={16} /> : t("trans_1")}
+        {loading ? <Loader2 className="animate-spin" size={16} /> : "تحديث"}
       </button>
     </form>);
 

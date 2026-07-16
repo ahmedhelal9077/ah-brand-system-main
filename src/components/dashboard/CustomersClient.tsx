@@ -65,7 +65,7 @@ export default function CustomersClient({ customers }: { customers: Customer[] }
                 <tr key={c.id} style={{ borderBottom: "1px solid var(--border)", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--sidebar-hover)"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}>
                   <td style={{ padding: "1rem", fontWeight: 500, display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     {c.totalOrders > 5 && <Star size={16} fill="var(--warning)" color="var(--warning)" />}
-                    {c.name || t("trans_21") /* Unknown */}
+                    {c.name || "كود الفاتورة:" /* Unknown */}
                   </td>
                   <td style={{ padding: "1rem", opacity: 0.8 }}>{c.phone}</td>
                   <td style={{ padding: "1rem", opacity: 0.8 }}>{c.city || "-"}</td>

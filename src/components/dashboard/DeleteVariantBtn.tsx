@@ -7,7 +7,7 @@ import { Trash2 } from "lucide-react";
 export default function DeleteVariantBtn({ variantId, productId }: {variantId: string;productId: string;}) {
   const { t } = useSettings();
   const handleDelete = async () => {
-    if (!window.confirm(t("trans_124"))) return;
+    if (!window.confirm("هل أنت متأكد من مسح هذا الموديل؟")) return;
     const result = await deleteVariant(variantId, productId);
     if (result?.error) {
       alert(result.error);

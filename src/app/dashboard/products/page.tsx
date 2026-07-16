@@ -54,7 +54,7 @@ export default async function ProductsPage() {
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="wholesalePrice">{t("trans_77")}</label>
+              <label className="input-label" htmlFor="wholesalePrice">{"سعر الجملة (اختياري)"}</label>
               <input className="input-field" type="number" step="0.01" id="wholesalePrice" name="wholesalePrice" placeholder="0.00" />
             </div>
             
@@ -69,11 +69,11 @@ export default async function ProductsPage() {
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="code">{t("trans_78")}</label>
-              <input className="input-field" type="number" id="code" name="code" placeholder={t("trans_79")} />
+              <label className="input-label" htmlFor="code">{"الكود (اختياري)"}</label>
+              <input className="input-field" type="number" id="code" name="code" placeholder={"تلقائي"} />
             </div>
             
-            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || t("trans_64")}>
+            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || "جاري الحفظ..."}>
               {t("addProduct")}
             </SubmitButton>
           </form>

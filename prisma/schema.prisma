@@ -22,7 +22,6 @@ model User {
   packedSales Sale[] @relation("PackedSales")
   reservations Reservation[]
   activities ActivityLog[]
-  shifts    Shift[]
 }
 
 model Category {
@@ -88,8 +87,6 @@ model Sale {
   status        String     @default("COMPLETED") // "COMPLETED", "PENDING", "PACKED", "CANCELLED"
   hasIssue      Boolean    @default(false)
   issueReason   String?
-  shiftId       String?
-  shift         Shift?     @relation(fields: [shiftId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @default(now()) @updatedAt
   packedAt      DateTime?
@@ -183,8 +180,6 @@ model Expense {
   type        String   @default("GENERAL") // "GENERAL" or "PARTNER_SPECIFIC"
   partnerId   String?  // If type is PARTNER_SPECIFIC, this expense applies only to this partner's profit
   partner     Partner? @relation(fields: [partnerId], references: [id])
-  shiftId     String?
-  shift       Shift?   @relation(fields: [shiftId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -220,20 +215,3 @@ model Purchase {
   updatedAt       DateTime @updatedAt
 }
 
-model Shift {
-  id            String   @id @default(cuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  startTime     DateTime @default(now())
-  endTime       DateTime?
-  startingCash  Float
-  expectedCash  Float?
-  actualCash    Float?
-  shortage      Float?
-  notes         String?
-  status        String   @default("OPEN") // OPEN, CLOSED
-  sales         Sale[]
-  expenses      Expense[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}

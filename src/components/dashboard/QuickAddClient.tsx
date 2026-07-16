@@ -88,7 +88,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
       const data = await res.json();
       updateVariant(id, "imageUrl", data.imageUrl);
     } catch (err) {
-      alert(t("trans_134"));
+      alert("فشل رفع الصورة");
     }
   };
 
@@ -112,13 +112,13 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
   const handleSaveAll = async () => {
     if (isSavingRef.current) return;
     if (!name || !price) {
-      setError(t("trans_153"));
+      setError("برجاء كتابة اسم الشنطة والسعر.");
       return;
     }
 
     const validVariants = variants.filter((v) => v.colorName.trim() !== "");
     if (validVariants.length === 0) {
-      setError(t("trans_154"));
+      setError("برجاء إدخال لون واحد على الأقل.");
       return;
     }
 
@@ -155,7 +155,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
       }
     } catch (err: any) {
       console.error(err);
-      setError(t("trans_155"));
+      setError("حجم البيانات أو الصور كبير جداً على الرفع مرة واحدة. حاول تقليل عدد الألوان أو مساحة الصور.");
       setIsSaving(false);
       isSavingRef.current = false;
     }
@@ -171,8 +171,8 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
         color: "white"
       }}>
           <Loader2 className="animate-spin" size={48} style={{ marginBottom: "1rem", color: "var(--accent)" }} />
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>{t("trans_156")}</h2>
-          <p>{t("trans_157")}</p>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>{"جاري إضافة الشنطة..."}</h2>
+          <p>{"برجاء الانتظار وعدم إغلاق الصفحة"}</p>
         </div>
       }
 
@@ -182,26 +182,26 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
             <ArrowRight size={20} />
           </Link>
         }
-        <h1 style={{ fontSize: "1.5rem", margin: 0 }}>{t("trans_158")}</h1>
+        <h1 style={{ fontSize: "1.5rem", margin: 0 }}>{"⚡ إضافة سريعة للشنط"}</h1>
       </div>
 
       {/* Product Details Section */}
       <div className="glass-panel" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.1rem", marginBottom: "1rem", color: "var(--primary)" }}>{t("trans_159")}</h2>
+        <h2 style={{ fontSize: "1.1rem", marginBottom: "1rem", color: "var(--primary)" }}>{"البيانات الأساسية"}</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label className="input-label">{t("trans_160")}</label>
+            <label className="input-label">{"اسم الشنطة (الموديل)"}</label>
             <input
               type="text"
               className="input-field"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t("trans_161")}
+              placeholder={"مثال: شنطة شانيل كلاسيك"}
               autoFocus />
             
           </div>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label className="input-label">{t("trans_162")}</label>
+            <label className="input-label">{"سعر البيع (ج.م)"}</label>
             <input
               type="number"
               className="input-field"
@@ -211,9 +211,9 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
             
           </div>
           <div className="input-group" style={{ marginBottom: 0 }}>
-            <label className="input-label">{t("trans_11")}</label>
+            <label className="input-label">{"القسم"}</label>
             <select className="input-field" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-              <option value="">{t("trans_133")}</option>
+              <option value="">{"بدون قسم"}</option>
               {categories.map((cat) =>
               <option key={cat.id} value={cat.id}>{cat.name}</option>
               )}
@@ -225,8 +225,8 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
       {/* Variants Section */}
       <div className="glass-panel" style={{ padding: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-          <h2 style={{ fontSize: "1.1rem", color: "var(--primary)" }}>{t("trans_163")}</h2>
-          <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{t("trans_164")}</span>
+          <h2 style={{ fontSize: "1.1rem", color: "var(--primary)" }}>{"الألوان والكميات"}</h2>
+          <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{"اضغط Enter بعد الكمية لفتح سطر جديد"}</span>
         </div>
 
         {/* Mobile-optimized cards for rows instead of a strict table */}
@@ -263,13 +263,13 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
                 value={v.colorHex || "#000000"}
                 onChange={(e) => updateVariant(v.id, "colorHex", e.target.value)}
                 style={{ width: "40px", height: "100%", padding: "0", border: "1px solid var(--border)", borderRadius: "4px", cursor: "pointer", flexShrink: 0 }}
-                title={t("trans_165")} />
+                title={"اختر درجة اللون"} />
               
                 <input
                 id={`colorName-${index}`}
                 type="text"
                 className="input-field"
-                placeholder={t("trans_166")}
+                placeholder={"اللون (أسود)"}
                 value={v.colorName}
                 onChange={(e) => updateVariant(v.id, "colorName", e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, index, "colorName")}
@@ -281,7 +281,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
                 <input
                 type="number"
                 className="input-field"
-                placeholder={t("trans_167")}
+                placeholder={"الكمية"}
                 value={v.stock}
                 onChange={(e) => updateVariant(v.id, "stock", e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, index, "stock")}
@@ -293,7 +293,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
               onClick={() => removeRow(v.id)}
               className="btn btn-danger"
               style={{ padding: "0.6rem", flexShrink: 0 }}
-              title={t("trans_168")}>
+              title={"حذف السطر"}>
               
                 <Trash2 size={16} />
               </button>
@@ -306,7 +306,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
           className="btn btn-secondary"
           style={{ width: "100%", marginTop: "1rem", padding: "1rem", display: "flex", justifyContent: "center", gap: "0.5rem", borderStyle: "dashed" }}>
           
-          <Plus size={18} />{t("trans_169")}
+          <Plus size={18} />{"سطر جديد"}
         </button>
       </div>
 
@@ -328,7 +328,7 @@ export default function QuickAddClient({ categories, isModal, onSuccess }: {cate
           style={{ width: "100%", maxWidth: "600px", padding: "1rem", fontSize: "1.1rem", display: "flex", justifyContent: "center", gap: "0.5rem" }}>
           
           {isSaving ? <Loader2 className="animate-spin" /> : <Save />}
-          {isSaving ? t("trans_170") : t("trans_171")}
+          {isSaving ? "جاري الحفظ والتحميل..." : "حفظ وإضافة الشنطة بألوانها"}
         </button>
       </div>
 
