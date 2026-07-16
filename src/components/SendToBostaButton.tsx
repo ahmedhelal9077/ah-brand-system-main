@@ -1,18 +1,20 @@
 "use client";
+import { useSettings } from "@/lib/SettingsContext";
 
 import { useState } from "react";
 import { Send, Loader2, CheckCircle, ExternalLink } from "lucide-react";
 import { sendOrderToBosta } from "@/lib/bostaActions";
 
-export default function SendToBostaButton({ saleId, currentTracking, currentAwb, isPacked }: { saleId: string, currentTracking: string | null, currentAwb: string | null, isPacked: boolean }) {
+export default function SendToBostaButton({ saleId, currentTracking, currentAwb, isPacked }: {saleId: string;currentTracking: string | null;currentAwb: string | null;isPacked: boolean;}) {
+  const { t } = useSettings();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tracking, setTracking] = useState<string | null>(currentTracking);
   const [awb, setAwb] = useState<string | null>(currentAwb);
 
   const handleSend = async () => {
-    if (!confirm("هل أنت متأكد من إرسال هذا الطلب لشركة بوسطة؟")) return;
-    
+    if (!confirm(t("trans_383"))) return;
+
     setLoading(true);
     setError(null);
     try {
@@ -24,7 +26,7 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
         setAwb(res.awbUrl || null);
       }
     } catch (e: any) {
-      setError(e.message || "حدث خطأ غير معروف");
+      setError(e.message || t("trans_384"));
     } finally {
       setLoading(false);
     }
@@ -48,40 +50,40 @@ export default function SendToBostaButton({ saleId, currentTracking, currentAwb,
   if (tracking?.startsWith("LOCAL-TANTA")) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem", color: "#10b981", fontWeight: "bold" }}>
-        <CheckCircle size={16} /> توصيل داخلي (طنطا) 🚚
-      </div>
-    );
+        <CheckCircle size={16} />{t("trans_385")}
+      </div>);
+
   }
 
   if (tracking) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.85rem", color: "var(--accent)" }}>
-        <CheckCircle size={16} /> تم الإرسال ({tracking})
-        {awb && (
-          <button onClick={handlePrint} className="btn btn-secondary" style={{ padding: "0.2rem 0.5rem", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "0.2rem" }}>
-            <ExternalLink size={14} /> طباعة البوليصة
-          </button>
-        )}
-      </div>
-    );
+        <CheckCircle size={16} />{t("trans_386")}{tracking})
+        {awb &&
+        <button onClick={handlePrint} className="btn btn-secondary" style={{ padding: "0.2rem 0.5rem", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "0.2rem" }}>
+            <ExternalLink size={14} />{t("trans_387")}
+        </button>
+        }
+      </div>);
+
   }
 
   if (!isPacked) {
-    return <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>في انتظار التجهيز</span>;
+    return <span style={{ fontSize: "0.8rem", color: "#9ca3af" }}>{t("trans_388")}</span>;
   }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-      <button 
+      <button
         onClick={handleSend}
         disabled={loading}
         className="btn"
-        style={{ background: "#ea580c", color: "white", padding: "0.3rem 0.5rem", fontSize: "0.8rem", width: "fit-content" }}
-      >
-        {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-        إرسال لبوسطة
+        style={{ background: "#ea580c", color: "white", padding: "0.3rem 0.5rem", fontSize: "0.8rem", width: "fit-content" }}>
+        
+        {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}{t("trans_389")}
+
       </button>
       {error && <span style={{ color: "var(--danger)", fontSize: "0.75rem" }}>{error}</span>}
-    </div>
-  );
+    </div>);
+
 }

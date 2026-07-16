@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^3.0.3",
+    "exceljs": "^4.4.0",
     "html5-qrcode": "^2.3.8",
     "jimp": "^1.6.1",
     "jose": "^6.2.3",
@@ -22,10 +23,13 @@
     "react": "19.2.4",
     "react-barcode": "^1.6.1",
     "react-dom": "19.2.4",
-    "recharts": "^3.8.1",
-    "sharp": "^0.35.2"
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/generator": "^8.0.0",
+    "@babel/parser": "^8.0.4",
+    "@babel/traverse": "^8.0.4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -33,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "prisma": "^5.22.0",
+    "sharp": "^0.35.3",
     "typescript": "^5"
   }
 }

@@ -1,10 +1,21 @@
-import { Loader2 } from "lucide-react";
-
 export default function Loading() {
+  const text = "AH BRAND";
+  const totalLetters = text.length;
+  
+  // Generate CSS for each letter animation with staggered delays
+  let letterStyles = '';
+  for (let i = 0; i < totalLetters; i++) {
+    const delay = i * 0.15; // 150ms stagger per letter
+    letterStyles += `
+      .fade-letter-${i} {
+        animation: letter-fade 2s ease-in-out ${delay}s infinite;
+      }
+    `;
+  }
+
   return (
-    <div style={{ 
+    <div style={{
       display: "flex", 
-      flexDirection: "column", 
       justifyContent: "center", 
       alignItems: "center", 
       height: "100vh", 
@@ -13,33 +24,49 @@ export default function Loading() {
       color: "var(--foreground)",
       position: "fixed",
       inset: 0,
-      zIndex: 9999
+      zIndex: 9999,
+      direction: "ltr"
     }}>
       <style dangerouslySetInnerHTML={{__html: `
-        @keyframes pulse-logo {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.05); opacity: 0.8; }
+        @keyframes letter-fade {
+          0% { opacity: 0; filter: blur(8px); transform: translateY(8px); }
+          20% { opacity: 1; filter: blur(0px); transform: translateY(0); }
+          60% { opacity: 1; filter: blur(0px); transform: translateY(0); }
+          80% { opacity: 0; filter: blur(8px); transform: translateY(-8px); }
+          100% { opacity: 0; filter: blur(8px); transform: translateY(-8px); }
         }
-        @keyframes spin-loader {
-          to { transform: rotate(360deg); }
+        .fade-logo-container {
+          display: flex;
+          align-items: center;
+          direction: ltr;
+          unicode-bidi: bidi-override;
         }
+        .fade-letter {
+          font-family: 'Outfit', sans-serif;
+          font-size: 3rem;
+          font-weight: 900;
+          color: var(--foreground);
+          opacity: 0;
+          display: inline-block;
+        }
+        .fade-letter-light {
+          font-weight: 300;
+          opacity: 0;
+        }
+        .fade-letter-space {
+          width: 0.6rem;
+        }
+        ${letterStyles}
       `}} />
-      <div style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        alignItems: "center", 
-        gap: "1.5rem",
-        animation: "pulse-logo 2s ease-in-out infinite"
-      }}>
-        <img 
-          src="/icon-192.png" 
-          alt="AH Brand Logo" 
-          style={{ width: "90px", height: "90px", borderRadius: "18px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)" }} 
-        />
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--accent)", fontWeight: "bold", fontSize: "1.1rem" }}>
-          <Loader2 style={{ animation: "spin-loader 1s linear infinite" }} size={24} />
-          <span>جاري التحميل...</span>
-        </div>
+      <div className="fade-logo-container">
+        {text.split('').map((char, i) => (
+          <span
+            key={i}
+            className={`fade-letter ${i >= 3 ? 'fade-letter-light' : ''} ${char === ' ' ? 'fade-letter-space' : ''} fade-letter-${i}`}
+          >
+            {char === ' ' ? '\u00A0' : char}
+          </span>
+        ))}
       </div>
     </div>
   );

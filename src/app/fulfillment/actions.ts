@@ -136,7 +136,7 @@ export async function sendDailyFulfillmentReport() {
   const appendedIds = appendedPacked.map(s => s.id);
   const regularPacked = packedToday.filter(s => !appendedIds.includes(s.id));
 
-  const dateStr = startOfDay.toLocaleDateString('ar-EG');
+  const dateStr = startOfDay.toLocaleDateString('en-GB');
   let message = `📦 *تقرير تقفيل المخزن ليوم ${dateStr}*\n\n`;
 
   // 1. Regular Packed Range

@@ -1,3 +1,4 @@
+import { getServerTranslation } from "@/lib/serverI18n";
 import { PrismaClient } from "@prisma/client";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -7,13 +8,14 @@ import { AlertTriangle } from "lucide-react";
 const prisma = new PrismaClient();
 
 export default async function IssuesPage() {
+  const { t } = await getServerTranslation();
   const session = await getSession();
   if (!session || session.role !== "OWNER") {
     redirect("/dashboard");
   }
 
   const orders = await prisma.sale.findMany({
-    where: { 
+    where: {
       type: "ONLINE",
       hasIssue: true
     },
@@ -36,9 +38,9 @@ export default async function IssuesPage() {
     <div style={{ padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "2rem" }}>
         <AlertTriangle size={28} className="text-danger" />
-        <h1 style={{ fontSize: "1.8rem", fontWeight: "bold" }}>مشاكل التقفيل في المخزن</h1>
+        <h1 style={{ fontSize: "1.8rem", fontWeight: "bold" }}>{t("trans_76")}</h1>
       </div>
       <IssuesClient initialOrders={orders} />
-    </div>
-  );
+    </div>);
+
 }

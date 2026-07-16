@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Trash2, Barcode } from "lucide-react";
 import Link from "next/link";
 import VariantForm from "@/components/VariantForm";
 import DeleteVariantBtn from "@/components/dashboard/DeleteVariantBtn";
+import EditVariantImageBtn from "@/components/dashboard/EditVariantImageBtn";
 // using a simple barcode component or just displaying the number for now
 // To use react-barcode we'd need a client component, we'll keep it simple here.
 
@@ -61,10 +62,12 @@ export default async function VariantsPage({ params }: { params: Promise<{ id: s
                 {product.variants.map((variant) => (
                   <tr key={variant.id} style={{ borderBottom: "1px solid var(--border)" }}>
                     <td style={{ padding: "1rem 0.5rem", fontWeight: "500", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <EditVariantImageBtn variantId={variant.id} productId={product.id} currentImageUrl={variant.imageUrl} />
                       {variant.colorHex && (
                         <div style={{ width: "16px", height: "16px", borderRadius: "50%", backgroundColor: variant.colorHex, border: "1px solid #fff" }} />
                       )}
                       {variant.colorName}
+                      {variant.size && <span style={{ padding: "0.1rem 0.4rem", background: "var(--secondary)", borderRadius: "var(--radius-sm)", fontSize: "0.8rem", marginRight: "0.5rem" }}>{variant.size}</span>}
                     </td>
                     <td style={{ padding: "1rem 0.5rem" }}>
                       <form action={updateStock.bind(null, variant.id, product.id, variant.stock + 1)} style={{ display: "inline" }}>

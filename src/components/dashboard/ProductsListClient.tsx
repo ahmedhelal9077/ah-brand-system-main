@@ -29,14 +29,23 @@ export default function ProductsListClient({ products, categories, translations 
           <Package size={20} className="text-primary" /> {translations.productCatalog}
         </h2>
         
-        <input 
-          type="search" 
-          placeholder="بحث بالاسم، الكود، التصنيف..." 
-          className="input-field"
-          value={searchQuery}
-          onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(30); }}
-          style={{ maxWidth: "300px", margin: 0 }}
-        />
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <a
+            href="/api/export?type=products"
+            target="_blank"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors"
+          >
+            Excel
+          </a>
+          <input 
+            type="search" 
+            placeholder="بحث بالاسم، الكود، التصنيف..." 
+            className="input-field"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(30); }}
+            style={{ maxWidth: "300px", margin: 0 }}
+          />
+        </div>
       </div>
       
       <div style={{ overflowX: "auto" }}>

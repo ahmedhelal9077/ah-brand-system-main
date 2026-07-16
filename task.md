@@ -1,0 +1,12 @@
+- `[x]` 1. Update Global Colors & Theme
+  - `[x]` Modify `src/app/globals.css` to Light Mode (Blue/White).
+- `[x]` 2. Update Layout Structure
+  - `[x]` Modify `src/app/dashboard/layout.tsx` (Add Header, Notifications, Export, Create Button).
+- `[x]` 3. Update Sidebar
+  - `[x]` Modify `src/components/SidebarClient.tsx` (White background, grey text, blue active state, bottom profile).
+- `[x]` 4. Update Dashboard Page
+  - `[x]` Modify `src/app/dashboard/page.tsx` (Metrics cards, Charts grid, Shipping Products style table).
+  - `[x]` Add `recharts` if not already installed to support the charts.
+- `[x]` 5. Update Loading Animation
+  - `[x]` Modify `src/app/loading.tsx` to use the new blue primary color.
+- `[ ]` 6. Verify and Deploy

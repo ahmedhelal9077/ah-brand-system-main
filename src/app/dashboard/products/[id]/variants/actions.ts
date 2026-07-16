@@ -20,6 +20,7 @@ export async function createVariant(formData: FormData) {
   const productId = formData.get("productId") as string;
   const colorName = formData.get("colorName") as string;
   const colorHex = formData.get("colorHex") as string;
+  const size = formData.get("size") as string | null;
   const imageUrl = formData.get("imageUrl") as string | null;
   const stockStr = formData.get("stock") as string;
   
@@ -53,6 +54,7 @@ export async function createVariant(formData: FormData) {
       productId,
       colorName,
       colorHex,
+      size,
       imageUrl,
       stock,
       barcode,
@@ -123,5 +125,27 @@ export async function deleteVariant(variantId: string, productId: string) {
     });
     await prisma.productVariant.delete({ where: { id: variantId } });
   }
+  revalidatePath(`/dashboard/products/${productId}/variants`);
+}
+
+export async function updateVariantImage(variantId: string, productId: string, newImageUrl: string) {
+  const session = await checkOwner();
+  
+  await prisma.productVariant.update({
+    where: { id: variantId },
+    data: { imageUrl: newImageUrl }
+  });
+  
+  const variant = await prisma.productVariant.findUnique({ where: { id: variantId }, include: { product: true } });
+  if (variant) {
+    await prisma.activityLog.create({
+      data: {
+        userId: session.id,
+        action: "UPDATE_VARIANT",
+        details: `Updated image of variant: ${variant.colorName} from ${variant.product.name}`
+      }
+    });
+  }
+  
   revalidatePath(`/dashboard/products/${productId}/variants`);
 }

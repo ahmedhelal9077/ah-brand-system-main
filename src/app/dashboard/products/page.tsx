@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 export default async function ProductsPage() {
   const { t } = await getServerTranslation();
   const products = await prisma.product.findMany({
-    include: { 
+    include: {
       category: true,
       variants: {
         select: { stock: true }
@@ -22,7 +22,7 @@ export default async function ProductsPage() {
     },
     orderBy: { createdAt: "desc" }
   });
-  
+
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" }
   });
@@ -52,32 +52,37 @@ export default async function ProductsPage() {
               <label className="input-label" htmlFor="price">{t("priceEgp")}</label>
               <input className="input-field" type="number" step="0.01" id="price" name="price" required placeholder="0.00" />
             </div>
+
+            <div className="input-group" style={{ marginBottom: "0" }}>
+              <label className="input-label" htmlFor="wholesalePrice">{t("trans_77")}</label>
+              <input className="input-field" type="number" step="0.01" id="wholesalePrice" name="wholesalePrice" placeholder="0.00" />
+            </div>
             
             <div className="input-group" style={{ marginBottom: "0" }}>
               <label className="input-label" htmlFor="categoryId">{t("categories")}</label>
               <select className="input-field" id="categoryId" name="categoryId">
                 <option value="">{t("noCategory")}</option>
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
+                {categories.map((cat) =>
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                )}
               </select>
             </div>
 
             <div className="input-group" style={{ marginBottom: "0" }}>
-              <label className="input-label" htmlFor="code">الكود (اختياري)</label>
-              <input className="input-field" type="number" id="code" name="code" placeholder="تلقائي" />
+              <label className="input-label" htmlFor="code">{t("trans_78")}</label>
+              <input className="input-field" type="number" id="code" name="code" placeholder={t("trans_79")} />
             </div>
             
-            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || "جاري الحفظ..."}>
+            <SubmitButton className="btn btn-primary" style={{ marginTop: "0.5rem" }} pendingText={t("processing") || t("trans_64")}>
               {t("addProduct")}
             </SubmitButton>
           </form>
         </div>
 
         {/* Products List (Client Component with Pagination and Search) */}
-        <ProductsListClient 
-          products={products} 
-          categories={categories} 
+        <ProductsListClient
+          products={products}
+          categories={categories}
           translations={{
             productCatalog: t("productCatalog"),
             code: t("code"),
@@ -88,10 +93,10 @@ export default async function ProductsPage() {
             actions: t("actions"),
             uncategorized: t("uncategorized"),
             available: t("available")
-          }} 
-        />
+          }} />
+        
 
       </div>
-    </div>
-  );
+    </div>);
+
 }

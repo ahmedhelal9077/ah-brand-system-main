@@ -5,43 +5,57 @@ import { SettingsProvider } from "@/lib/SettingsContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin"]
 });
 
 import { Viewport } from "next";
 
 export const viewport: Viewport = {
-  themeColor: "#0ea5e9",
+  themeColor: "#111111",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
+  userScalable: false
 };
 
 export const metadata: Metadata = {
   title: "AH Brand Store",
   description: "AH Brand - Premium Bag Inventory System",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon-192.png"
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AH Brand Store",
+    title: "AH Brand Store"
   },
   openGraph: {
     title: "AH Brand Store",
-    description: "Discover our premium bag collection at AH Brand.",
+    description: "نظام إدارة متجر AH Brand",
     siteName: "AH Brand Store",
     type: "website",
+    images: [
+    {
+      url: "/icon.png",
+      width: 1024,
+      height: 1024,
+      alt: "AH Brand Logo"
+    }]
+
   },
   twitter: {
     card: "summary_large_image",
     title: "AH Brand Store",
-    description: "Discover our premium bag collection at AH Brand.",
+    description: "نظام إدارة متجر AH Brand",
+    images: ["/icon.png"]
   }
 };
 
@@ -49,10 +63,10 @@ import Navbar from "@/components/Navbar";
 import ProgressBarProvider from "@/components/ProgressBar";
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children
+
+
+}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="ar" dir="rtl" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
@@ -63,6 +77,6 @@ export default function RootLayout({
           </SettingsProvider>
         </ProgressBarProvider>
       </body>
-    </html>
-  );
+    </html>);
+
 }

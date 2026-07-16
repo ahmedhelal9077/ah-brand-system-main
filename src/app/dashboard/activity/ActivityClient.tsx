@@ -7,50 +7,50 @@ type ActivityLog = {
   createdAt: Date;
   action: string;
   details: string;
-  user: { username: string };
+  user: {username: string;};
 };
 
 const translateLog = (text: string, lang: string) => {
   if (lang !== "ar") return text;
-  
-  return text
-    .replace(/Processed sale for/g, "تم تسجيل بيع لـ")
-    .replace(/items/g, "عناصر")
-    .replace(/Total:/g, "الإجمالي:")
-    .replace(/Invoice:/g, "كود الفاتورة:")
-    .replace(/Processed return for/g, "تم إرجاع")
-    .replace(/Refunded/g, "تم استرداد مبلغ")
-    .replace(/Reason:/g, "السبب:")
-    .replace(/User logged in/g, "تم تسجيل الدخول")
-    .replace(/Added new product/g, "تمت إضافة منتج جديد")
-    .replace(/Updated product/g, "تم تعديل منتج")
-    .replace(/Deleted product/g, "تم حذف منتج")
-    .replace(/Added variant/g, "تمت إضافة صنف/لون")
-    .replace(/Code:/g, "كود:")
-    .replace(/Color:/g, "اللون:")
-    .replace(/Processed online order for/g, "تم تسجيل أوردر أونلاين لـ")
-    .replace(/Reserved/g, "تم حجز")
-    .replace(/for 1 days/g, "لمدة يوم واحد");
+
+  return text.
+  replace(/Processed sale for/g, t("trans_18")).
+  replace(/items/g, t("trans_19")).
+  replace(/Total:/g, t("trans_20")).
+  replace(/Invoice:/g, t("trans_21")).
+  replace(/Processed return for/g, t("trans_22")).
+  replace(/Refunded/g, t("trans_23")).
+  replace(/Reason:/g, t("trans_24")).
+  replace(/User logged in/g, t("trans_25")).
+  replace(/Added new product/g, t("trans_26")).
+  replace(/Updated product/g, t("trans_27")).
+  replace(/Deleted product/g, t("trans_28")).
+  replace(/Added variant/g, t("trans_29")).
+  replace(/Code:/g, t("trans_30")).
+  replace(/Color:/g, t("trans_31")).
+  replace(/Processed online order for/g, t("trans_32")).
+  replace(/Reserved/g, t("trans_33")).
+  replace(/for 1 days/g, t("trans_34"));
 };
 
 const translateAction = (action: string, lang: string) => {
   if (lang !== "ar") return action;
-  
+
   const map: Record<string, string> = {
-    "LOGIN": "تسجيل دخول",
-    "SALE": "عملية بيع",
-    "RETURN": "إرجاع",
-    "ADD_PRODUCT": "إضافة منتج",
-    "EDIT_PRODUCT": "تعديل منتج",
-    "DELETE_PRODUCT": "حذف منتج",
-    "ADD_VARIANT": "إضافة صنف",
-    "ONLINE_ORDER": "أونلاين",
-    "RESERVATION": "حجز"
+    "LOGIN": t("trans_35"),
+    "SALE": t("trans_36"),
+    "RETURN": t("trans_37"),
+    "ADD_PRODUCT": t("trans_38"),
+    "EDIT_PRODUCT": t("trans_39"),
+    "DELETE_PRODUCT": t("trans_40"),
+    "ADD_VARIANT": t("trans_41"),
+    "ONLINE_ORDER": t("trans_42"),
+    "RESERVATION": t("trans_43")
   };
   return map[action] || action;
 };
 
-export default function ActivityClient({ logs }: { logs: ActivityLog[] }) {
+export default function ActivityClient({ logs }: {logs: ActivityLog[];}) {
   const { t, language } = useSettings();
 
   return (
@@ -58,18 +58,18 @@ export default function ActivityClient({ logs }: { logs: ActivityLog[] }) {
       <table className="table" style={{ width: "100%", textAlign: language === "ar" ? "right" : "left", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ borderBottom: "1px solid var(--border)" }}>
-            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("time" as any) || (language === "ar" ? "الوقت" : "Time")}</th>
-            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("user" as any) || (language === "ar" ? "المستخدم" : "User")}</th>
-            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("action" as any) || (language === "ar" ? "الإجراء" : "Action")}</th>
-            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("details" as any) || (language === "ar" ? "التفاصيل" : "Details")}</th>
+            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("time" as any) || (language === "ar" ? t("trans_44") : "Time")}</th>
+            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("user" as any) || (language === "ar" ? t("trans_45") : "User")}</th>
+            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("action" as any) || (language === "ar" ? t("trans_46") : "Action")}</th>
+            <th style={{ padding: "1rem", color: "#9ca3af" }}>{t("details" as any) || (language === "ar" ? t("trans_47") : "Details")}</th>
           </tr>
         </thead>
         <tbody>
-          {logs.length === 0 && (
-            <tr><td colSpan={4} style={{ padding: "1rem", textAlign: "center", color: "#9ca3af" }}>{language === "ar" ? "لا يوجد نشاطات مسجلة." : "No activity yet."}</td></tr>
-          )}
-          {logs.map(log => (
-            <tr key={log.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", transition: "background 0.2s" }} className="hover-bg">
+          {logs.length === 0 &&
+          <tr><td colSpan={4} style={{ padding: "1rem", textAlign: "center", color: "#9ca3af" }}>{language === "ar" ? t("trans_48") : "No activity yet."}</td></tr>
+          }
+          {logs.map((log) =>
+          <tr key={log.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", transition: "background 0.2s" }} className="hover-bg">
               <td style={{ padding: "1rem", whiteSpace: "nowrap", direction: "ltr", textAlign: language === "ar" ? "right" : "left" }}>
                 {log.createdAt.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}
               </td>
@@ -83,9 +83,9 @@ export default function ActivityClient({ logs }: { logs: ActivityLog[] }) {
                 {translateLog(log.details, language)}
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-    </div>
-  );
+    </div>);
+
 }

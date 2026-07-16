@@ -117,7 +117,7 @@ export default async function DashboardOverview({ searchParams }: { searchParams
         invoiceCode: code, 
         timesAppended: count,
         currentStatus: sale?.status || "Unknown",
-        originalDate: sale ? new Date(sale.createdAt).toLocaleDateString("ar-EG") : "Unknown"
+        originalDate: sale ? new Date(sale.createdAt).toLocaleDateString("en-GB") : "Unknown"
       };
     })
     .sort((a, b) => b.timesAppended - a.timesAppended);

@@ -24,5 +24,9 @@ export default async function POSPage() {
     }
   });
 
-  return <POSClient variants={variants} userRole={session.role} />;
+  const activeShift = await prisma.shift.findFirst({
+    where: { userId: session.id, status: "OPEN" },
+  });
+
+  return <POSClient variants={variants} userRole={session.role} activeShift={activeShift} userId={session.id} />;
 }

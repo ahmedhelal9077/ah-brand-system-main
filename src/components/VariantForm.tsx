@@ -5,7 +5,7 @@ import { Plus, Image as ImageIcon } from "lucide-react";
 import { useSettings } from "@/lib/SettingsContext";
 import { createVariant } from "@/app/dashboard/products/[id]/variants/actions";
 
-export default function VariantForm({ productId }: { productId: string }) {
+export default function VariantForm({ productId }: {productId: string;}) {
   const { t } = useSettings();
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -74,7 +74,7 @@ export default function VariantForm({ productId }: { productId: string }) {
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: formData
       });
       const data = await res.json();
       if (data.success) {
@@ -113,41 +113,46 @@ export default function VariantForm({ productId }: { productId: string }) {
         </div>
         
         <div className="input-group" style={{ marginBottom: "0" }}>
+          <label className="input-label" htmlFor="size">{t("trans_424")}</label>
+          <input className="input-field" type="text" id="size" name="size" placeholder={t("trans_425")} />
+        </div>
+        
+        <div className="input-group" style={{ marginBottom: "0" }}>
           <label className="input-label" htmlFor="stock">{t("quantity")}</label>
           <input className="input-field" type="number" id="stock" name="stock" required defaultValue="0" min="0" />
         </div>
 
         <div className="input-group" style={{ marginBottom: "0" }}>
           <label className="input-label">{t("image")}</label>
-          <div 
+          <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onClick={() => fileInputRef.current?.click()}
-            style={{ 
-              border: "2px dashed var(--border)", 
-              borderRadius: "var(--radius-md)", 
-              padding: "2rem", 
-              textAlign: "center", 
+            style={{
+              border: "2px dashed var(--border)",
+              borderRadius: "var(--radius-md)",
+              padding: "2rem",
+              textAlign: "center",
               cursor: "pointer",
               backgroundColor: "var(--secondary)",
               transition: "all 0.2s ease"
-            }}
-          >
-            {imageUrl ? (
-              <img src={imageUrl} alt="Uploaded" style={{ maxHeight: "150px", maxWidth: "100%", borderRadius: "var(--radius-sm)" }} />
-            ) : (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", color: "var(--foreground)" }}>
+            }}>
+            
+            {imageUrl ?
+            <img src={imageUrl} alt="Uploaded" style={{ maxHeight: "150px", maxWidth: "100%", borderRadius: "var(--radius-sm)" }} /> :
+
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", color: "var(--foreground)" }}>
                 <ImageIcon size={40} style={{ marginBottom: "1rem", color: "var(--primary)" }} />
                 <p>{uploading ? "Uploading..." : t("uploadImage")}</p>
               </div>
-            )}
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleFileChange} 
-              style={{ display: "none" }} 
-              accept="image/*"
-            />
+            }
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              accept="image/*" />
+            
           </div>
         </div>
         
@@ -155,6 +160,6 @@ export default function VariantForm({ productId }: { productId: string }) {
           {t("save")}
         </button>
       </form>
-    </div>
-  );
+    </div>);
+
 }

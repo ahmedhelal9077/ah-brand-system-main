@@ -22,26 +22,30 @@ model User {
   packedSales Sale[] @relation("PackedSales")
   reservations Reservation[]
   activities ActivityLog[]
+  shifts    Shift[]
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  isSystem  Boolean   @default(false) // For auto-managed categories if needed
-  products  Product[]
+  id           String    @id @default(cuid())
+  name         String    @unique
+  isSystem     Boolean   @default(false)
+  partnerId    String?
+  partner      Partner?  @relation(fields: [partnerId], references: [id])
+  products     Product[]
 }
 
 model Product {
-  id          String           @id @default(cuid())
-  code        Int              @unique
-  name        String
-  price       Float
-  isActive    Boolean          @default(true)
-  categoryId  String?
-  category    Category?        @relation(fields: [categoryId], references: [id])
-  variants    ProductVariant[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id             String           @id @default(cuid())
+  code           Int              @unique
+  name           String
+  price          Float
+  wholesalePrice Float?           @default(0) // Cost price
+  isActive       Boolean          @default(true)
+  categoryId     String?
+  category       Category?        @relation(fields: [categoryId], references: [id])
+  variants       ProductVariant[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model ProductVariant {
@@ -50,6 +54,7 @@ model ProductVariant {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   colorName String
   colorHex  String?
+  size      String?  // For clothes etc
   imageUrl  String?
   barcode   String   @unique
   stock     Int      @default(0)
@@ -65,6 +70,7 @@ model Sale {
   packedBy   User?      @relation("PackedSales", fields: [packedById], references: [id])
   totalAmount   Float
   discountAmount Float      @default(0)
+  returnedAmount Float      @default(0)
   remainingAmount Float?
   invoiceCode   String?    @unique
   customerId    String?
@@ -82,6 +88,8 @@ model Sale {
   status        String     @default("COMPLETED") // "COMPLETED", "PENDING", "PACKED", "CANCELLED"
   hasIssue      Boolean    @default(false)
   issueReason   String?
+  shiftId       String?
+  shift         Shift?     @relation(fields: [shiftId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @default(now()) @updatedAt
   packedAt      DateTime?
@@ -96,8 +104,10 @@ model SaleItem {
   productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
   quantity         Int
   priceAtSale      Float
+  costAtSale       Float          @default(0) // Captured wholesale price at time of sale
   isReturned       Boolean        @default(false)
   returnReason     String?
+  returnedQuantity Int            @default(0)
   createdAt        DateTime       @default(now())
 }
 
@@ -163,4 +173,67 @@ model StoreLocation {
   url       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  amount      Float
+  description String
+  date        DateTime @default(now())
+  type        String   @default("GENERAL") // "GENERAL" or "PARTNER_SPECIFIC"
+  partnerId   String?  // If type is PARTNER_SPECIFIC, this expense applies only to this partner's profit
+  partner     Partner? @relation(fields: [partnerId], references: [id])
+  shiftId     String?
+  shift       Shift?   @relation(fields: [shiftId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Partner {
+  id           String     @id @default(cuid())
+  name         String     @unique
+  expenseShare Float      @default(0) // Percentage of shared expenses this partner bears
+  categories   Category[]
+  expenses     Expense[]
+}
+
+model Supplier {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  phone     String?
+  balance   Float      @default(0) // Negative means we owe them, Positive means they owe us
+  purchases Purchase[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Purchase {
+  id              String   @id @default(cuid())
+  supplierId      String
+  supplier        Supplier @relation(fields: [supplierId], references: [id])
+  totalAmount     Float
+  paidAmount      Float
+  remainingAmount Float
+  date            DateTime @default(now())
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Shift {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  startTime     DateTime @default(now())
+  endTime       DateTime?
+  startingCash  Float
+  expectedCash  Float?
+  actualCash    Float?
+  shortage      Float?
+  notes         String?
+  status        String   @default("OPEN") // OPEN, CLOSED
+  sales         Sale[]
+  expenses      Expense[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

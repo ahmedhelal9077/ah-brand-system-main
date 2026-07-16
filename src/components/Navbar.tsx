@@ -25,24 +25,24 @@ export default function Navbar() {
       </div>
       
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <button 
+        <button
           onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
           className="btn btn-secondary"
           title={t("language")}
-          style={{ padding: "0.5rem" }}
-        >
+          style={{ padding: "0.5rem" }}>
+          
           <Globe size={20} />
-          <span style={{ margin: "0 0.5rem" }}>{language === "ar" ? "EN" : "عربي"}</span>
+          <span style={{ margin: "0 0.5rem" }}>{language === "ar" ? "EN" : t("trans_308")}</span>
         </button>
-        <button 
+        <button
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           className="btn btn-secondary"
           title={theme === "light" ? t("darkMode") : t("lightMode")}
-          style={{ padding: "0.5rem", borderRadius: "50%" }}
-        >
+          style={{ padding: "0.5rem", borderRadius: "50%" }}>
+          
           {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
         </button>
       </div>
-    </nav>
-  );
+    </nav>);
+
 }

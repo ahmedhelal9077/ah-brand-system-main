@@ -19,6 +19,7 @@ export async function createProduct(formData: FormData): Promise<void> {
   
   const name = formData.get("name") as string;
   const priceStr = formData.get("price") as string;
+  const wholesalePriceStr = formData.get("wholesalePrice") as string;
   const categoryId = formData.get("categoryId") as string;
   const codeStr = formData.get("code") as string;
   
@@ -44,10 +45,13 @@ export async function createProduct(formData: FormData): Promise<void> {
     newCode = lastProduct ? lastProduct.code + 1 : 1000;
   }
   
+  const wholesalePrice = wholesalePriceStr ? parseFloat(wholesalePriceStr) : 0;
+
   await prisma.product.create({
     data: {
       name,
       price,
+      wholesalePrice: isNaN(wholesalePrice) ? 0 : wholesalePrice,
       code: newCode,
       categoryId: categoryId || null,
     }
@@ -70,6 +74,7 @@ export async function editProduct(productId: string, formData: FormData) {
   
   const name = formData.get("name") as string;
   const priceStr = formData.get("price") as string;
+  const wholesalePriceStr = formData.get("wholesalePrice") as string;
   const categoryId = formData.get("categoryId") as string;
   const codeStr = formData.get("code") as string;
   
@@ -89,11 +94,14 @@ export async function editProduct(productId: string, formData: FormData) {
     }
   }
   
+  const wholesalePrice = wholesalePriceStr ? parseFloat(wholesalePriceStr) : undefined;
+
   await prisma.product.update({
     where: { id: productId },
     data: {
       name,
       price,
+      ...(wholesalePrice !== undefined && !isNaN(wholesalePrice) ? { wholesalePrice } : {}),
       categoryId: categoryId || null,
       ...(code !== undefined ? { code } : {})
     }

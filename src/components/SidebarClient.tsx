@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Users, Package, Tags, ShoppingCart, LogOut, Printer, FileText, Settings, Bell, RefreshCcw, Menu, ChevronLeft, ChevronRight, Activity, AlertTriangle, Moon, Sun, Globe, Store } from "lucide-react";
+import { LayoutDashboard, Users, Package, Tags, ShoppingCart, LogOut, Printer, FileText, Settings, Bell, RefreshCcw, Menu, ChevronLeft, ChevronRight, Activity, AlertTriangle, Moon, Sun, Globe, Store, Wallet, Camera, Briefcase } from "lucide-react";
 import { useSettings } from "@/lib/SettingsContext";
 import { useState, useEffect, useMemo } from "react";
 
@@ -74,8 +74,14 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
     { name: t("barcodes" as any) || "Barcodes", href: "/dashboard/barcodes", icon: Printer },
     { name: t("settings" as any) || "Settings", href: "/dashboard/settings", icon: Settings, ownerOnly: true },
     { name: t("issues" as any) || "Issues", href: "/dashboard/issues", icon: AlertTriangle, ownerOnly: true },
+    { name: t("crm_title") || "Customers", href: "/dashboard/customers", icon: Users, ownerOnly: true },
+    { name: t("suppliers_title") || "Suppliers", href: "/dashboard/suppliers", icon: Briefcase, ownerOnly: true },
+    { name: t("audit_title") || "Audit", href: "/dashboard/audit", icon: Camera, ownerOnly: true },
     { name: t("pos"), href: "/pos", icon: ShoppingCart },
     { name: t("store"), href: "/store", icon: Store },
+    { name: "إدارة الورديات", href: "/dashboard/shifts", icon: Clock },
+    { name: "المصروفات", href: "/dashboard/expenses", icon: Wallet, ownerOnly: true },
+    { name: "الحسابات", href: "/dashboard/accounting", icon: FileText, ownerOnly: true }
   ];
 
   return (
@@ -190,7 +196,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
           const linkProps = {
             style: { 
               display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 0.5rem", 
-              transition: "all 0.3s ease", color: isActive ? "var(--sidebar-fg)" : "rgba(255,255,255,0.6)",
+              transition: "all 0.3s ease", color: "var(--sidebar-fg)", opacity: isActive ? 1 : 0.6,
               justifyContent: isCollapsed ? "center" : "flex-start",
               cursor: "pointer",
               fontWeight: isActive ? 600 : 400
