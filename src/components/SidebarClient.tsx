@@ -95,7 +95,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
       color: "var(--sidebar-fg)"
     }}>
       <div style={{ display: "flex", justifyContent: isCollapsed ? "center" : "space-between", alignItems: "center", marginBottom: "3rem", position: "relative" }}>
-        {!isCollapsed && <h2 style={{ fontSize: "1.6rem", fontWeight: "900", letterSpacing: "1px", color: "var(--primary)", margin: 0, fontFamily: "'Outfit', sans-serif" }}>AH <span style={{ color: "white", fontWeight: "300" }}>BRAND</span></h2>}
+        {!isCollapsed && <h2 style={{ fontSize: "1.6rem", fontWeight: "900", letterSpacing: "1px", color: "var(--primary)", margin: 0, fontFamily: "'Outfit', sans-serif" }}>AH <span style={{ color: "var(--sidebar-inactive)", fontWeight: "300" }}>BRAND</span></h2>}
         
         <button onClick={() => setIsCollapsed(!isCollapsed)} style={{ 
           background: "transparent", border: "none", cursor: "pointer", color: "var(--sidebar-fg)", 
@@ -195,7 +195,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
           const linkProps = {
             style: { 
               display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 0.5rem", 
-              transition: "all 0.3s ease", color: isActive ? "var(--sidebar-fg)" : "rgba(255,255,255,0.6)",
+              transition: "all 0.3s ease", color: isActive ? "var(--sidebar-fg)" : "var(--sidebar-inactive)",
               justifyContent: isCollapsed ? "center" : "flex-start",
               cursor: "pointer",
               fontWeight: isActive ? 600 : 400
@@ -228,7 +228,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
         <div style={{ display: "flex", justifyContent: isCollapsed ? "center" : "space-between", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: isCollapsed ? "wrap" : "nowrap" }}>
           <button 
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "0.5rem", color: "var(--sidebar-fg)", cursor: "pointer", flex: 1, display: "flex", justifyContent: "center" }}
+            style={{ background: "var(--sidebar-hover)", border: "1px solid var(--sidebar-border)", borderRadius: "var(--radius-sm)", padding: "0.5rem", color: "var(--sidebar-fg)", cursor: "pointer", flex: 1, display: "flex", justifyContent: "center" }}
             title="Toggle Theme"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -236,7 +236,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
           
           <button 
             onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')} 
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-sm)", padding: "0.5rem", color: "var(--sidebar-fg)", cursor: "pointer", flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
+            style={{ background: "var(--sidebar-hover)", border: "1px solid var(--sidebar-border)", borderRadius: "var(--radius-sm)", padding: "0.5rem", color: "var(--sidebar-fg)", cursor: "pointer", flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}
             title="Toggle Language"
           >
             <Globe size={18} />
@@ -251,7 +251,7 @@ export default function SidebarClient({ role, username, lowStockAlerts }: Sideba
           {!isCollapsed && (
             <div style={{ fontSize: "0.9rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", display: "flex", justifyContent: "space-between", alignItems: "center", flex: 1 }}>
               <span>{username}</span>
-              <a href="/api/auth/logout" style={{ color: "rgba(255,255,255,0.5)", cursor: "pointer", transition: "color 0.2s" }} title="Logout">
+              <a href="/api/auth/logout" style={{ color: "var(--sidebar-inactive)", cursor: "pointer", transition: "color 0.2s" }} title="Logout">
                 <LogOut size={16} />
               </a>
             </div>
